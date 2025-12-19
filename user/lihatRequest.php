@@ -21,7 +21,6 @@ $compModel    = new Comp();
 $reviewModel  = new Review();
 
 $admins = $userModel->getAdmins();
-$requestModel->autoFinishWaitingReview();
 
 $pageTitle = "Data Request";
 $currentPage = "lihatReq";
@@ -38,6 +37,7 @@ if (!empty($_GET['search'])) { $filters['search'] = $_GET['search']; }
 if (!empty($_GET['StatusReq'])) {
     $filters['StatusReq'] = $_GET['StatusReq'];
 }
+
 
 function renderStatusBadge($status) {
     switch ($status) {
@@ -325,6 +325,7 @@ if (isset($_GET['ajax'], $_GET['ReqID'])) {
         echo '<hr><h6>Work Result</h6>';
         echo '<p><b>Notes:</b> ' . h($finish['Catatan'], '-') . '</p>';
         echo '<p><b>Estimated Time:</b> ' . h($finish['EstWaktu'], '-') . ' hours</p>';
+        echo '<p><b>Application Link:</b> ' . h($finish['LinkApk'], '-') . '</p>';
     }
 
     if ($review) {
@@ -485,35 +486,6 @@ require_once __DIR__ . '/includes/header.php';
                         </tbody>
                     </table>
                 </div>
-                <nav class="mt-3" style="margin-left: 10px">
-                    <ul class="pagination">
-
-                        <!-- Previous -->
-                        <li class="page-item <?= ($page <= 1) ? 'disabled' : '' ?>">
-                            <a class="page-link" 
-                            href="?page=<?= $page - 1 ?>&search=<?= $_GET['search'] ?? '' ?>">
-                                &laquo;
-                            </a>
-                        </li>
-
-                        <?php for ($i = 1; $i <= $totalPages; $i++): ?>
-                            <li class="page-item <?= ($i == $page) ? 'active' : '' ?>">
-                                <a class="page-link" 
-                                href="?page=<?= $i ?>&search=<?= $_GET['search'] ?? '' ?>">
-                                    <?= $i ?>
-                                </a>
-                            </li>
-                        <?php endfor; ?>
-
-                        <!-- Next -->
-                        <li class="page-item <?= ($page >= $totalPages) ? 'disabled' : '' ?>">
-                            <a class="page-link" 
-                            href="?page=<?= $page + 1 ?>&search=<?= $_GET['search'] ?? '' ?>">
-                                &raquo;
-                            </a>
-                        </li>
-                    </ul>
-                </nav>
                 <?php else: ?>
                     <div class="text-center py-5">
                         <i class="bi bi-send display-1 text-muted"></i>
@@ -545,7 +517,41 @@ require_once __DIR__ . '/includes/header.php';
 
         </div>
     </div>
-</div>    
+</div>
+
+   
+    <!-- PAGINATION -->
+    <nav class="mt-3">
+        <ul class="pagination">
+
+            <!-- Previous -->
+            <li class="page-item <?= ($page <= 1) ? 'disabled' : '' ?>">
+                <a class="page-link" 
+                   href="?page=<?= $page - 1 ?>&search=<?= $_GET['search'] ?? '' ?>">
+                    &laquo;
+                </a>
+            </li>
+
+            <?php for ($i = 1; $i <= $totalPages; $i++): ?>
+                <li class="page-item <?= ($i == $page) ? 'active' : '' ?>">
+                    <a class="page-link" 
+                       href="?page=<?= $i ?>&search=<?= $_GET['search'] ?? '' ?>">
+                        <?= $i ?>
+                    </a>
+                </li>
+            <?php endfor; ?>
+
+            <!-- Next -->
+            <li class="page-item <?= ($page >= $totalPages) ? 'disabled' : '' ?>">
+                <a class="page-link" 
+                   href="?page=<?= $page + 1 ?>&search=<?= $_GET['search'] ?? '' ?>">
+                    &raquo;
+                </a>
+            </li>
+
+        </ul>
+    </nav>
+    
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
