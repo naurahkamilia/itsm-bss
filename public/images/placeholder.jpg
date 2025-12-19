@@ -1,0 +1,26 @@
+<!-- This is a placeholder. You need to add an actual image file here -->
+<!-- For XAMPP local, you can: -->
+<!-- 1. Create a simple 800x600px image with gray background -->
+<!-- 2. Add text "No Image Available" in the center -->
+<!-- 3. Save it as placeholder.jpg in this location -->
+<!-- 
+   To create placeholder programmatically, you can use this PHP code in a separate file:
+   
+   <?php
+   $width = 800;
+   $height = 600;
+   $image = imagecreatetruecolor($width, $height);
+   $bgColor = imagecolorallocate($image, 230, 230, 230);
+   $textColor = imagecolorallocate($image, 100, 100, 100);
+   imagefill($image, 0, 0, $bgColor);
+   $text = "No Image Available";
+   $fontSize = 5;
+   $textWidth = imagefontwidth($fontSize) * strlen($text);
+   $textHeight = imagefontheight($fontSize);
+   $x = ($width - $textWidth) / 2;
+   $y = ($height - $textHeight) / 2;
+   imagestring($image, $fontSize, $x, $y, $text, $textColor);
+   imagejpeg($image, 'placeholder.jpg', 90);
+   imagedestroy($image);
+   ?>
+-->
