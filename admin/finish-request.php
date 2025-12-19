@@ -43,13 +43,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $ReqID      = (int) $_POST['ReqID'];
     $NIK        = (int) $_SESSION['user_id'];
     $Catatan    = !empty($_POST['Catatan']) ? trim($_POST['Catatan']) : null;
-    $LinkApk    = !empty($_POST['LinkApk']) ? trim($_POST['LinkApk']) : null;
     $TglSelesai = date('Y-m-d H:i:s');
 
-    // --- Update saja record existing ---
     $dataToUpdate = [
         'Catatan'    => $Catatan,
-        'LinkApk'    => $LinkApk,
         'TglSelesai' => $TglSelesai
     ];
 
@@ -168,7 +165,7 @@ require_once __DIR__ . '/includes/header.php';
             <div class="card-header bg-success text-white">
                 <div class="d-flex justify-content-between">
                 <h5 class="mb-0">Request Details</h5>
-                    <a href="karyawan-list.php" class="btn btn-secondary">
+                    <a href="request-list.php" class="btn btn-secondary">
                         <i class="bi bi-arrow-left"></i> Back
                     </a>
                 </div>
@@ -210,13 +207,6 @@ require_once __DIR__ . '/includes/header.php';
     <div class="mb-3">
         <label class="form-label">Notes / Description</label>
         <textarea name="Catatan" class="form-control" rows="4" placeholder="Optional notes" required><?= htmlspecialchars($finishData['Catatan'] ?? '') ?></textarea>
-    </div>
-
-    <div class="mb-3">
-        <label class="form-label">Proof Link (e.g., APK / Document)</label>
-        <input type="url" name="LinkApk" class="form-control" 
-            placeholder="https://example.com/..." 
-            value="<?= htmlspecialchars($finishData['LinkApk'] ?? '') ?>">
     </div>
 
     <?php if (!empty($finishData['MulaiKerja']) && !empty($finishData['Deadline'])): ?>

@@ -291,7 +291,7 @@ require_once __DIR__ . '/includes/header.php';
         <label class="form-label">
             Documentation Image 
         </label>
-        <input type="file"name="Dokumentasi" id="Dokumentasi" class="form-control" accept=".jpg,.jpeg" required>
+        <input type="file"name="Dokumentasi" id="Dokumentasi" class="form-control" accept=".jpg,.jpeg">
         <small class="text-muted">
             <i>Format type: JPG / JPEG (Max. 2 MB)</i>
         </small>

@@ -398,17 +398,22 @@ public function count($filters = []) {
     )->execute([$id]);
 }
 
+    public function selesai($reqID){
+    $sql = "UPDATE request 
+            SET StatusReq = 'Selesai'
+            WHERE ReqID = :ReqID";
+    $stmt = $this->db->prepare($sql);
+    $stmt->execute(['ReqID' => $reqID]);
 
-   public function selesai($id) {
-    return $this->db->prepare(
-        "UPDATE request 
-         SET StatusReq='Selesai',
-             waiting_review_at = NULL
-         WHERE ReqID=?"
-    )->execute([$id]);
+    $sql2 = "UPDATE review
+             SET Status = 'Approved'
+             WHERE ReqID = :ReqID";
+    $stmt2 = $this->db->prepare($sql2);
+    $stmt2->execute(['ReqID' => $reqID]);
+
+    return true;
 }
 
-    
     public function getRequestDetails($reqID) {
         $sql = "SELECT 
                     r.*,
@@ -431,15 +436,15 @@ public function count($filters = []) {
     }
 
     public function autoCancelExpired() {
-    $sql = "UPDATE request r
+    $sql = "SELECT r.ReqID
+            FROM request r
             JOIN request_completion c ON r.ReqID = c.ReqID
-            SET r.StatusReq = 'Dibatalkan'
             WHERE r.StatusReq = 'Antrian'
               AND c.Deadline IS NOT NULL
               AND c.Deadline < NOW()
-              AND c.MulaiKerja IS NULL"; 
-
-    $this->db->query($sql);
+              AND c.MulaiKerja IS NULL";
+    $stmt = $this->db->query($sql);
+    return $stmt->fetchAll(PDO::FETCH_COLUMN);
 }
 
 public function autoFinishWaitingReview() {

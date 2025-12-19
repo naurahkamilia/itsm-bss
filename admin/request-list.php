@@ -165,11 +165,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
             break;
 
         case 'start_revisi':
-            $requestModel->approve($reqID);
+
+            $estJam = isset($_POST['estJam']) ? (int)$_POST['estJam'] : 0;
+            if ($estJam <= 0) {
+                http_response_code(400);
+                echo 'Invalid estimate';
+                exit;
+            }
+
+            $compModel->startRevision($reqID, $estJam);
+            $requestModel->setRevisi($reqID);
+
+            $notifTitle = 'Revision Started';
+            $notifMessage = 'Revision has started with new estimation of ' . $estJam . ' hours';
+            $emailSubject = 'Request Revision Started';
             $extraDateText = "<b>Revision Started On:</b> $now <br>";
-            $notifTitle = 'Revising Request';
-            $notifMessage = 'The admin will revise your request regarding "' . $itemName . '".';
-            $emailSubject = "Request Revision";
+
             break;
 
         case 'start_work':
@@ -257,10 +268,23 @@ if (isset($_GET['ajax'], $_GET['ReqID'])) {
         exit;
     }
 
+    // Auto cancel jika status Antrian dan lewat deadline
+    if ($request['StatusReq'] === 'Antrian' && $finish && !empty($finish['Deadline'])) {
+        $deadline = strtotime($finish['Deadline']);
+        $now = time();
+
+        if ($now > $deadline && $finish['MulaiKerja'] === null) {
+            $requestModel->cancelled($reqID);
+            $request['StatusReq'] = 'Dibatalkan'; 
+        }
+    }
+
+    // Tampilkan detail request
     echo '<p><b>Request Date:</b> '.h($request['Tgl_request']).'</p>';
     echo '<p><b>Application / Hardware:</b> '.h($request['NamaApk'] ?? $request['NamaHw']).'</p>';
     echo '<p><b>Status:</b> '.renderStatusBadge($request['StatusReq']).'</p>';    
     echo '<p><b>Decription:</b> '.h($request['Request']).'</p>';
+
     if (!empty($request['Dokumentasi'])) {
         echo '<p><b>Photo:</b><br>
             <img src="' . BASE_URL . 'public/images/request/' . h($request['Dokumentasi']) . '"
@@ -272,22 +296,22 @@ if (isset($_GET['ajax'], $_GET['ReqID'])) {
         echo '<p><b>Photo:</b> -</p>';
     }
 
+    // Work Result
     if ($finish) {
-    echo '<hr><h6>Work Result</h6>';
-    echo '<p><b>Notes:</b> ' . h($finish['Catatan'], '-') . '</p>';
+        echo '<hr><h6>Work Result</h6>';
+        echo '<p><b>Notes:</b> ' . h($finish['Catatan'], '-') . '</p>';
 
-    $estText = h($finish['EstWaktu'], '-'); 
-    $estText .= ' hours'; 
+        $estText = h($finish['EstWaktu'], '-'); 
+        $estText .= ' hours'; 
 
-    if (!empty($review['Status']) && $review['Status'] === 'Revision') { 
-        $estText .= ' <b>(Revision)</b>'; 
+        if (!empty($review['Status']) && $review['Status'] === 'Revision') { 
+            $estText .= ' <b>(Revision)</b>'; 
+        }
+
+        echo '<p><b>Estimate:</b> ' . $estText . '</p>';
     }
 
-    echo '<p><b>Estimate:</b> ' . $estText . '</p>';
-
-    echo '<p><b>Apk Link:</b> ' . h($finish['LinkApk'], '-') . '</p>';
-}
-
+    // Review
     if ($review) {
         echo '<hr><h6>Review</h6>';
         echo '<p><b>Review Status:</b> '.renderReviewBadge($review['Status']).'</p>';
@@ -295,52 +319,37 @@ if (isset($_GET['ajax'], $_GET['ReqID'])) {
         echo '<p><b>Completion Date:</b> '.h($review['Tanggal']).'</p>';
     }
 
-        echo '<hr>';
+    echo '<hr>';
 
+    // Action buttons
     if ($request['StatusReq'] === 'Pending') {
-
         echo '
-         <div class="d-flex justify-content-end gap-2">
-            <button class="btn btn-success btn-action"
-                    data-action="approve">
+        <div class="d-flex justify-content-end gap-2">
+            <button class="btn btn-success btn-action" data-action="approve">
                 <i class="bi bi-check-circle"></i> Accept
             </button>
-
-            <button class="btn btn-danger btn-action"
-                    data-action="reject">
+            <button class="btn btn-danger btn-action" data-action="reject">
                 <i class="bi bi-x-circle"></i> Reject
             </button>
         </div>';
-
-    }
-
-    elseif ($request['StatusReq'] === 'Disetujui') {
+    } elseif ($request['StatusReq'] === 'Disetujui') {
         echo '
         <h6>Estimasi Pengerjaan (Hours)</h6>
-        <input type="text" class="form-control mb-2" id="estimasi"
-            placeholder="Estimasi..." required>
+        <input type="text" class="form-control mb-2" id="estimasi" placeholder="Estimasi..." required>
         <div class="d-flex justify-content-end gap-2">
-        <button class="btn btn-primary btn-action"
-                data-action="process">
-            <i class="bi bi-play-circle"></i> Work On
-        </button>
+            <button class="btn btn-primary btn-action" data-action="process">
+                <i class="bi bi-play-circle"></i> Work On
+            </button>
         </div>';
-
-    }
-
-    elseif ($request['StatusReq'] === 'Revisi') {
-
+    } elseif ($request['StatusReq'] === 'Revisi') {
         echo '
         <h6>Estimasi Revisi (Hours)</h6>
-        <input type="text" class="form-control mb-2" id="estimasi"
-            placeholder="Estimasi..." required>
+        <input type="text" class="form-control mb-2" id="estimasi" placeholder="Estimasi..." required>
         <div class="d-flex justify-content-end gap-2">
-        <button class="btn btn-primary btn-action"
-                data-action="process">
-            <i class="bi bi-play-circle"></i> Start Revision
-        </button>
+            <button class="btn btn-primary btn-action" data-action="process">
+                <i class="bi bi-play-circle"></i> Start Revision
+            </button>
         </div>';
-
     }
 
     exit;
