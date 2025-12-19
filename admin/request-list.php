@@ -284,8 +284,6 @@ if (isset($_GET['ajax'], $_GET['ReqID'])) {
     }
 
     echo '<p><b>Estimate:</b> ' . $estText . '</p>';
-
-    echo '<p><b>Apk Link:</b> ' . h($finish['LinkApk'], '-') . '</p>';
 }
 
     if ($review) {

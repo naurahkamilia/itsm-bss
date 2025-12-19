@@ -325,7 +325,6 @@ if (isset($_GET['ajax'], $_GET['ReqID'])) {
         echo '<hr><h6>Work Result</h6>';
         echo '<p><b>Notes:</b> ' . h($finish['Catatan'], '-') . '</p>';
         echo '<p><b>Estimated Time:</b> ' . h($finish['EstWaktu'], '-') . ' hours</p>';
-        echo '<p><b>Application Link:</b> ' . h($finish['LinkApk'], '-') . '</p>';
     }
 
     if ($review) {

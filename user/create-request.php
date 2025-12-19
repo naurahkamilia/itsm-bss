@@ -106,10 +106,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $hwID = $db->lastInsertId();
         }
 
-        if (!isset($_FILES['Dokumentasi']) || $_FILES['Dokumentasi']['error'] !== UPLOAD_ERR_OK) {
-            die('Dokumentasi wajib diupload.');
-        }
+        $namaFile = null; 
 
+    if (isset($_FILES['Dokumentasi']) && $_FILES['Dokumentasi']['error'] === UPLOAD_ERR_OK) {
         $file = $_FILES['Dokumentasi'];
 
         if ($file['size'] > 2 * 1024 * 1024) {
@@ -135,6 +134,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (!move_uploaded_file($file['tmp_name'], $uploadPath)) {
             die('Gagal upload dokumentasi.');
         }
+    }
 
        $reqID = $reqModel->create([
         'NIK'          => (int)$nik,
@@ -291,7 +291,7 @@ require_once __DIR__ . '/includes/header.php';
         <label class="form-label">
             Documentation Image 
         </label>
-        <input type="file"name="Dokumentasi" id="Dokumentasi" class="form-control" accept=".jpg,.jpeg" required>
+        <input type="file"name="Dokumentasi" id="Dokumentasi" class="form-control" accept=".jpg,.jpeg">
         <small class="text-muted">
             <i>Format type: JPG / JPEG (Max. 2 MB)</i>
         </small>
