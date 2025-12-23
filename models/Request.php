@@ -254,6 +254,16 @@ public function count($filters = []) {
         $params[':prio'] = $filters['Prioritas'];
     }
 
+    if (!empty($filters['tanggal_dari'])) {
+        $sql .= " AND DATE(r.Tgl_request) >= :tgl_dari";
+        $params[':tgl_dari'] = $filters['tanggal_dari'];
+    }
+
+    if (!empty($filters['tanggal_sampai'])) {
+        $sql .= " AND DATE(r.Tgl_request) <= :tgl_sampai";
+        $params[':tgl_sampai'] = $filters['tanggal_sampai'];
+    }
+
     $stmt = $this->db->prepare($sql);
     $stmt->execute($params);
 

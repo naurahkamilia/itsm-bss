@@ -59,14 +59,9 @@ if (is_numeric($adminNik)) {
             <div class="collapse navbar-collapse" id="adminNav">
                 <ul class="navbar-nav ms-auto align-items-center">
                     <li class="nav-item dropdown">
-                    <a class="nav-link position-relative text-light"
-                    href="#"
-                    role="button"
-                    data-bs-toggle="dropdown"
-                    aria-expanded="false">
-
+                    <a class="nav-link position-relative text-light" href="#" id="notifDropdown"
+                    role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         <i class="bi bi-bell fs-5"></i>
-
                         <?php if ($unreadCount > 0): ?>
                             <span class="position-absolute top-0 start-100 translate-middle
                                         badge rounded-pill bg-danger">
@@ -74,10 +69,7 @@ if (is_numeric($adminNik)) {
                             </span>
                         <?php endif; ?>
                     </a>
-
-                    <ul class="dropdown-menu dropdown-menu-end p-2"
-                        style="width:320px">
-
+                    <ul class="dropdown-menu dropdown-menu-end p-2" style="width:320px">
                         <li class="dropdown-header">
                             Notifications
                         </li>
@@ -88,15 +80,15 @@ if (is_numeric($adminNik)) {
                             </li>
                         <?php else: foreach ($notifs as $n): ?>
                             <li>
-                                <a class="dropdown-item small notif-item"
-                                href="request-list.php?id=<?= $n['ReqID'] ?>"
-                                data-id="<?= $n['NotifID'] ?>">
+                               <a class="dropdown-item small notif-item" 
+                                    href="request-list.php?id=<?= $n['ReqID'] ?>" 
+                                    data-id="<?= $n['NotifID'] ?>"
+                                    style="white-space: normal; word-wrap: break-word;">
 
                                     <strong><?= htmlspecialchars($n['Title']) ?></strong><br>
-                                    <span class="text-muted">
+                                    <span class="text-muted" style="display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
                                         <?= htmlspecialchars($n['Message']) ?>
                                     </span>
-
                                     <div class="text-muted small">
                                         <?= date('d M Y H:i', strtotime($n['CreatedAt'])) ?>
                                     </div>
@@ -105,7 +97,7 @@ if (is_numeric($adminNik)) {
                         <?php endforeach; endif; ?>
 
                     </ul>
-                </li>               
+                </li>         
                     <!-- User Dropdown -->
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" 
@@ -182,14 +174,20 @@ if (is_numeric($adminNik)) {
         <main class="admin-content">
 
 <script>
-document.querySelectorAll('.notif-item').forEach(el => {
-    el.addEventListener('click', () => {
-        fetch('ajax/notif-markasRead.php', {
-            method: 'POST',
-            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-            body: 'id=' + el.dataset.id
+document.addEventListener('DOMContentLoaded', function() {
+    const dropdown = document.getElementById('notifDropdown');
+    dropdown.addEventListener('shown.bs.dropdown', function () {
+        fetch('<?php echo BASE_URL; ?>ajax/notif-markasRead.php', {
+            method: 'POST'
+        })
+        .then(res => res.json())
+        .then(data => {
+            if(data.status === "success"){
+                const badge = dropdown.querySelector('.badge');
+                if(badge) badge.remove();
+            }
         });
     });
 });
-</script>
 
+</script>

@@ -222,12 +222,12 @@ require_once __DIR__ . '/includes/header.php';
     <input type="hidden" name="Tgl_request" value="<?= date('Y-m-d H:i:s'); ?>">
     <input type="hidden" name="StatusReq" value="Pending">
     <div class="mb-3">
-        <label class="form-label">Request Type</label>
-        <select name="JenisRequest" id="jenisRequest" class="form-control" required>
-            <option value="">-- Select Type --</option>
-            <option value="system">System</option>
-            <option value="hardware">Infrastuktur</option>
-        </select>
+    <label class="form-label">Request Type</label>
+    <select name="JenisRequest" id="jenisRequest" class="form-control" required>
+        <option value="">-- Select Type --</option>
+        <option value="system">System</option>
+        <option value="hardware">Infrastruktur</option>
+    </select>
     </div>
 
   <div id="formLanjutan" class="d-none">
@@ -302,7 +302,6 @@ require_once __DIR__ . '/includes/header.php';
 </div>
 </form>
 <script>
-    
     document.getElementById('jenisRequest').addEventListener('change', function () {
 
         const formLanjutan = document.getElementById('formLanjutan');
@@ -338,8 +337,7 @@ require_once __DIR__ . '/includes/header.php';
         );
     });
 
-document.querySelector('textarea[name="Request"]').required = true;
-document.querySelectorAll('input[name="Prioritas"]').forEach(el => el.required = true);
+    document.querySelector('textarea[name="Request"]').required = true;
 
 document.getElementById('Dokumentasi').addEventListener('change', function () {
     const file = this.files[0];

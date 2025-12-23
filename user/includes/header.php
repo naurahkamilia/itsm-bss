@@ -88,15 +88,15 @@ if (is_numeric($adminNik)) {
                             </li>
                         <?php else: foreach ($notifs as $n): ?>
                             <li>
-                               <a class="dropdown-item small notif-item"
-                                href="lihatRequest.php?id=<?= $n['ReqID'] ?>"
-                                data-id="<?= $n['NotifID'] ?>">
+                               <a class="dropdown-item small notif-item" 
+                                    href="lihatRequest.php?id=<?= $n['ReqID'] ?>" 
+                                    data-id="<?= $n['NotifID'] ?>"
+                                    style="white-space: normal; word-wrap: break-word;">
 
                                     <strong><?= htmlspecialchars($n['Title']) ?></strong><br>
-                                    <span class="text-muted">
+                                    <span class="text-muted" style="display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
                                         <?= htmlspecialchars($n['Message']) ?>
                                     </span>
-
                                     <div class="text-muted small">
                                         <?= date('d M Y H:i', strtotime($n['CreatedAt'])) ?>
                                     </div>

@@ -208,34 +208,19 @@ include 'includes/header.php';
                             </div>
                         </form>
 
-                    <div class="card mt-3 border-primary no-card-hover">
-                    <div class="card-body">
-                        <h6 class="card-title mb-2">
-                            <i class="bi bi-info-circle me-1"></i>
-                            Workflow
-                        </h6>
-                        <div class="workflow-thumb"data-bs-toggle="modal"
-                        data-bs-target="#workflowModal">
-                            <img src="<?= BASE_URL ?>public/images/workflow.jpg"
-                            class="img-fluid rounded" alt="Workflow">
-                        </div>
-                        </div>
-                    </div>
+                    <div class="panel mt-3">
+                    <h6 class="panel-title mb-3">
+                        <i class="bi bi-info-circle me-1"></i>
+                        Workflow
+                    </h6>
 
-                   <div class="modal" id="workflowModal" tabindex="-1" aria-hidden="true">
-                        <div class="modal-dialog modal-dialog-centered modal-xl">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title">Workflow</h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                                </div>
-                                <div class="modal-body text-center">
-                                    <img 
-                                        src="<?php echo BASE_URL; ?>public/images/workflow.jpg"
-                                        class="img-fluid rounded"
-                                        alt="Workflow">
-                                </div>
-                            </div>
+                    <div class="workflow-thumb d-flex justify-content-center">
+                    <img src="<?= BASE_URL ?>public/images/workflow.jpg"
+                        class="popup-image rounded"
+                        style="max-width:380px; cursor:zoom-in; display:block;"
+                        alt="Workflow">
+                    </div>
+                    </div>
 
                         </div>
                     </div>
@@ -259,6 +244,58 @@ function refreshCaptcha() {
             location.reload();
         });
 }
+
+document.addEventListener('DOMContentLoaded', function () {
+
+  document.querySelectorAll('.popup-image').forEach(img => {
+    img.addEventListener('click', function () {
+
+      if (document.getElementById('PURE_IMAGE_POPUP')) return;
+      const overlay = document.createElement('div');
+      overlay.id = 'PURE_IMAGE_POPUP';
+      overlay.style.position = 'fixed';
+      overlay.style.top = 0;
+      overlay.style.left = 0;
+      overlay.style.width = '100vw';
+      overlay.style.height = '100vh';
+      overlay.style.background = 'rgba(0,0,0,0.85)';
+      overlay.style.display = 'flex';
+      overlay.style.justifyContent = 'center';
+      overlay.style.alignItems = 'center';
+      overlay.style.zIndex = 9999999;
+      overlay.style.cursor = 'zoom-out';
+
+      const popupImg = document.createElement('img');
+      popupImg.src = this.src;
+      popupImg.style.maxWidth = '100vw';
+      popupImg.style.maxHeight = '100vh';
+      popupImg.style.boxShadow = '0 0 40px rgba(0,0,0,0.8)';
+      popupImg.style.transform = 'scale(0.8)';
+      popupImg.style.opacity = '0';
+      popupImg.style.transition = 'all 0.25s ease';
+
+      overlay.appendChild(popupImg);
+      document.body.appendChild(overlay);
+
+      requestAnimationFrame(() => {
+        popupImg.style.transform = 'scale(1.3)';
+        popupImg.style.opacity = '1';
+      });
+
+      overlay.addEventListener('click', () => overlay.remove());
+
+      document.addEventListener('keydown', function esc(e) {
+        if (e.key === 'Escape') {
+          overlay.remove();
+          document.removeEventListener('keydown', esc);
+        }
+      });
+
+    });
+  });
+
+});
+
 </script>
 
 <?php include 'includes/footer.php'; ?>

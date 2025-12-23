@@ -58,7 +58,7 @@ main {
     border: none;
     border-radius: 1rem;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    transition: all 0.3s;
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
 }
 
 .card:hover {
@@ -382,47 +382,3 @@ main {
     justify-content: center;
     color: var(--primary-green);
 }
- html {
-    overflow-y: scroll;
-}
-
-.workflow-thumb {
-    display: inline-block;
-    overflow: hidden;
-    cursor: zoom-in;
-}
-
-.workflow-thumb img {
-    display: block;
-    transition: transform .2s ease;
-}
-
-.workflow-thumb:hover img {
-    transform: scale(1.03);
-}
-
-/* Disable hover when modal open */
-body.modal-open .workflow-thumb:hover img {
-    transform: none !important;
-}
-
-/* BOOTSTRAP MODAL FIX */
-body.modal-open {
-    overflow: hidden !important;
-    padding-right: 0 !important;
-}
-
-.modal {
-    pointer-events: auto;
-}
-
-.modal,
-.modal-backdrop,
-.modal-dialog,
-.modal-content {
-    transform: translateZ(0);
-    backface-visibility: hidden;
-    will-change: auto;
-}
-
-

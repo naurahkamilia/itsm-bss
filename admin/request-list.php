@@ -525,29 +525,31 @@ require_once __DIR__ . '/includes/header.php';
     <nav class="mt-3">
         <ul class="pagination">
 
-            <!-- Previous -->
-            <li class="page-item <?= ($page <= 1) ? 'disabled' : '' ?>">
-                <a class="page-link" 
-                   href="?page=<?= $page - 1 ?>&search=<?= $_GET['search'] ?? '' ?>">
-                    &laquo;
-                </a>
-            </li>
+            <?php
+                $prevParams = $_GET;
+                $prevParams['page'] = max(1, $page - 1);
+                $nextParams = $_GET;
+                $nextParams['page'] = min($totalPages, $page + 1);
+                ?>
+                <li class="page-item <?= ($page <= 1) ? 'disabled' : '' ?>">
+                    <a class="page-link" href="?<?= http_build_query($prevParams) ?>">&laquo;</a>
+                </li>
 
-            <?php for ($i = 1; $i <= $totalPages; $i++): ?>
+
+            <?php 
+            
+            $queryParams = $_GET;
+            for ($i = 1; $i <= $totalPages; $i++):
+                $queryParams['page'] = $i;
+                $url = '?' . http_build_query($queryParams);
+            ?>
                 <li class="page-item <?= ($i == $page) ? 'active' : '' ?>">
-                    <a class="page-link" 
-                       href="?page=<?= $i ?>&search=<?= $_GET['search'] ?? '' ?>">
-                        <?= $i ?>
-                    </a>
+                    <a class="page-link" href="<?= $url ?>"><?= $i ?></a>
                 </li>
             <?php endfor; ?>
 
-            <!-- Next -->
-            <li class="page-item <?= ($page >= $totalPages) ? 'disabled' : '' ?>">
-                <a class="page-link" 
-                   href="?page=<?= $page + 1 ?>&search=<?= $_GET['search'] ?? '' ?>">
-                    &raquo;
-                </a>
+           <li class="page-item <?= ($page >= $totalPages) ? 'disabled' : '' ?>">
+                <a class="page-link" href="?<?= http_build_query($nextParams) ?>">&raquo;</a>
             </li>
 
         </ul>
