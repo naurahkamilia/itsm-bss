@@ -45,36 +45,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 require_once __DIR__ . '/includes/header.php';
 ?>
+<div class="container-fluid py-5">
+    <h2 class="mb-4 fw-semibold text-center">Edit Hardware</h2>
 
-<div class="container-fluid py-4">
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <h2>Edit Hardware</h2>
-        <a href="hardware-list.php" class="btn btn-secondary">
-            <i class="bi bi-arrow-left"></i> Back
-        </a>
-    </div>
-
-    <?php if ($error): ?>
-        <div class="alert alert-danger"><?= $error ?></div>
+    <?php if (!empty($error)): ?>
+        <div class="alert alert-danger shadow-sm"><?= htmlspecialchars($error) ?></div>
     <?php endif; ?>
 
-    <div class="card shadow-sm">
-        <div class="card-body">
-            <form method="POST">
-                <input type="hidden" name="HwID" value="<?= htmlspecialchars($hardwares['HwID']) ?>">
+    <form method="POST" class="card p-5 shadow-lg border-0 mx-auto" style="max-width: 600px;">
+        <input type="hidden" name="HwID" value="<?= htmlspecialchars($hardwares['HwID']) ?>">
 
-                <div class="mb-3">
-                    <label class="form-label">Hardware Name</label>
-                    <input type="text" class="form-control" name="NamaHw"
-                        value="<?= htmlspecialchars($hardwares['NamaHw']) ?>" required>
-                </div>
-
-                <button type="submit" class="btn btn-primary">
-                    <i class="bi bi-pencil-square"></i> Update
-                </button>
-            </form>
+        <div class="mb-4">
+            <label class="form-label fw-medium">Hardware Name</label>
+            <input type="text" name="NamaHw" class="form-control rounded-3 py-2" 
+                   placeholder="Enter Hardware Name" 
+                   value="<?= htmlspecialchars($hardwares['NamaHw']) ?>" required>
         </div>
-    </div>
+
+        <div class="text-end">
+            <a href="hardware-list.php" class="btn btn-secondary rounded-3 px-4 py-2 shadow-sm me-2">
+                Cancel
+            </a>
+            <button class="btn btn-primary rounded-3 px-5 py-2 shadow-sm" type="submit">
+                Save
+            </button>
+        </div>
+    </form>
 </div>
 
 <?php require_once __DIR__ . '/includes/footer.php'; ?>

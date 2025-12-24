@@ -62,83 +62,72 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 require_once __DIR__ . '/includes/header.php';
 ?>
 
-<div class="container-fluid py-4">
+<div class="container-fluid py-5">
+    <div class="mx-auto" style="max-width: 700px;">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="fw-semibold">Edit User Data</h2>
+            <a href="user-list.php" class="btn btn-outline-secondary rounded-3 px-3 py-2">
+                <i class="bi bi-arrow-left"></i> Back
+            </a>
+        </div>
 
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <h2>Edit User Data</h2>
-        <a href="user-list.php" class="btn btn-secondary">
-            <i class="bi bi-arrow-left"></i> Back
-        </a>
-    </div>
+        <?php if ($error): ?>
+            <div class="alert alert-danger shadow-sm mb-3"><?= htmlspecialchars($error) ?></div>
+        <?php endif; ?>
 
-    <?php if ($error): ?>
-        <div class="alert alert-danger"><?= $error ?></div>
-    <?php endif; ?>
+        <div class="card shadow-sm border-0">
+            <div class="card-body p-4">
+                <form method="POST">
+                    <div class="mb-3">
+                        <label class="form-label fw-medium">Employee ID</label>
+                        <input type="text" class="form-control rounded-3 py-2" 
+                               value="<?= htmlspecialchars($user['NIK']) ?>" readonly>
+                    </div>
 
-    <div class="card shadow-sm">
-        <div class="card-body">
+                    <div class="mb-3">
+                        <label class="form-label fw-medium">Name</label>
+                        <input type="text" name="name" class="form-control rounded-3 py-2"
+                               value="<?= htmlspecialchars($user['name']) ?>" required>
+                    </div>
 
-        <form method="POST" class="p-4">
+                    <div class="mb-3">
+                        <label class="form-label fw-medium">Email</label>
+                        <input type="email" name="email" class="form-control rounded-3 py-2"
+                               value="<?= htmlspecialchars($user['email']) ?>" required>
+                    </div>
 
-            <!-- NIK (READONLY) -->
-            <div class="mb-3">
-                <label class="form-label">Employee ID</label>
-                <input type="text" class="form-control"
-                       value="<?= htmlspecialchars($user['NIK']) ?>"
-                       readonly>
+                    <div class="mb-3">
+                        <label class="form-label fw-medium d-block">Role</label>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="role" value="admin"
+                                   <?= $user['role'] === 'admin' ? 'checked' : '' ?>>
+                            <label class="form-check-label">Admin</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="role" value="customer"
+                                   <?= $user['role'] === 'customer' ? 'checked' : '' ?>>
+                            <label class="form-check-label">User</label>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-medium">Status</label>
+                        <select name="status" class="form-control rounded-3 py-2" required>
+                            <option value="aktif" <?= $user['status'] === 'aktif' ? 'selected' : '' ?>>Active</option>
+                            <option value="nonaktif" <?= $user['status'] === 'nonaktif' ? 'selected' : '' ?>>Inactive</option>
+                        </select>
+                    </div>
+
+                    <div class="d-flex justify-content-end">
+                        <button type="submit" class="btn btn-primary rounded-3 px-5 py-2">
+                            <i class="bi bi-pencil-square"></i> Update User
+                        </button>
+                    </div>
+                </form>
             </div>
-
-            <div class="mb-3">
-                <label class="form-label">Name</label>
-                <input type="text" name="name" class="form-control"
-                       value="<?= htmlspecialchars($user['name']) ?>" required>
-            </div>
-
-            <div class="mb-3">
-                <label class="form-label">Email</label>
-                <input type="email" name="email" class="form-control"
-                       value="<?= htmlspecialchars($user['email']) ?>" required>
-            </div>
-
-            <div class="mb-3">
-                <label class="form-label">New Password (Optional)</label>
-                <input type="password" name="password" class="form-control">
-                <small class="text-muted">Leave blank if you do not want to change the password</small>
-            </div>
-
-            <div class="mb-3">
-                <label class="form-label d-block">Role</label>
-
-                <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio"
-                           name="role" value="admin"
-                           <?= $user['role'] === 'admin' ? 'checked' : '' ?>>
-                    <label class="form-check-label">Admin</label>
-                </div>
-
-                <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio"
-                           name="role" value="customer"
-                           <?= $user['role'] === 'customer' ? 'checked' : '' ?>>
-                    <label class="form-check-label">Customer</label>
-                </div>
-            </div>
-
-            <div class="mb-3">
-                <label class="form-label">Status</label>
-                <select name="status" class="form-control" required>
-                    <option value="aktif" <?= $user['status'] === 'aktif' ? 'selected' : '' ?>>Active</option>
-                    <option value="nonaktif" <?= $user['status'] === 'nonaktif' ? 'selected' : '' ?>>Inactive</option>
-                </select>
-            </div>
-
-            <button type="submit" class="btn btn-primary">
-                <i class="bi bi-pencil-square"></i> Update User
-            </button>
-
-        </form>
         </div>
     </div>
 </div>
+
 
 <?php require_once __DIR__ . '/includes/footer.php'; ?>

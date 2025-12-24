@@ -6,20 +6,21 @@ require_once '../models/User.php';
 
 Security::requireAdmin();
 
+if (!isset($_GET['id']) || empty($_GET['id'])) {
+    header('Location: user-list.php');
+    exit;
+}
+
+$nik = $_GET['id'];
+
 $userModel = new User();
 
-$nik = $_GET['nik'] ?? null;
+// Hapus user
+$deleted = $userModel->delete($nik);
 
-if (!$nik) {
-    die("NIK not found");
+if ($deleted) {
+    header('Location: user-list.php?deleted=1');
+} else {
+    header('Location: user-list.php?error=1');
 }
-
-$user = $userModel->getByNik($nik);
-
-if (!$user) {
-    die("User not found");
-}
-
-$userModel->delete($nik);
-header("Location: user-list.php?deleted=1");
 exit;

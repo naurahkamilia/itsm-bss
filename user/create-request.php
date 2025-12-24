@@ -209,98 +209,139 @@ require_once __DIR__ . '/includes/header.php';
 ?>
 
 <div class="container-fluid py-4">
-    <h2 class="mb-4">Create Request</h2>
+    <div class="row justify-content-center">
+        <div class="col-lg-8 col-xl-7">
 
-    <?php if (!empty($error)): ?>
-        <div class="alert alert-danger"><?= $error ?></div>
-    <?php endif; ?>
+            <!-- Header -->
+             <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                <h3 class="fw-semibold mb-1">Create Request</h3>
+                <p class="text-muted small mb-0">
+                    Submit a support request to the IT team
+                </p>
+            </div>
 
-<form method="POST" enctype="multipart/form-data" class="card p-4 shadow-sm">
+                <a href="lihatRequest.php" class="btn btn-outline-secondary btn-sm">
+                    <i class="bi bi-arrow-left me-1"></i> Back
+                </a>
+            </div>
 
-    <input type="hidden" name="NIK" value="<?= htmlspecialchars($nikSession); ?>">
-    <input type="hidden" name="Departemen" value="<?= htmlspecialchars($departemenSession); ?>">
-    <input type="hidden" name="Tgl_request" value="<?= date('Y-m-d H:i:s'); ?>">
-    <input type="hidden" name="StatusReq" value="Pending">
-    <div class="mb-3">
-    <label class="form-label">Request Type</label>
-    <select name="JenisRequest" id="jenisRequest" class="form-control" required>
-        <option value="">-- Select Type --</option>
-        <option value="system">System</option>
-        <option value="hardware">Infrastruktur</option>
-    </select>
-    </div>
+            <?php if (!empty($error)): ?>
+                <div class="alert alert-danger"><?= $error ?></div>
+            <?php endif; ?>
 
-  <div id="formLanjutan" class="d-none">
+            <form method="POST" enctype="multipart/form-data" class="card border-0 shadow-sm">
 
-    <div id="formSystem" class="d-none mb-3">
-        <label class="form-label">Application</label>
-        <select name="ApkID" id="ApkID" class="form-control">
-            <option value="">-- Select Application --</option>
-            <?php foreach ($listAplikasi as $apk): ?>
-                <option value="<?= $apk['ApkID']; ?>">
-                    <?= htmlspecialchars($apk['NamaApk']); ?>
-                </option>
-            <?php endforeach; ?>
-            <option value="lainnya">+ Others</option>
-        </select>
+                <div class="card-body p-4">
 
-        <input type="text" name="NamaApk" id="NamaApkBaru"
-               class="form-control mt-2 d-none"
-               placeholder="Enter application name...">
-    </div>
+                    <!-- Hidden -->
+                    <input type="hidden" name="NIK" value="<?= htmlspecialchars($nikSession); ?>">
+                    <input type="hidden" name="Departemen" value="<?= htmlspecialchars($departemenSession); ?>">
+                    <input type="hidden" name="Tgl_request" value="<?= date('Y-m-d H:i:s'); ?>">
+                    <input type="hidden" name="StatusReq" value="Pending">
 
-    <div id="formHardware" class="d-none mb-3">
-        <label class="form-label">Infrastuktur</label>
-        <select name="HwID" id="HwID" class="form-control">
-            <option value="">-- Select Infrastuktur --</option>
-            <?php foreach ($listHardware as $hw): ?>
-                <option value="<?= $hw['HwID']; ?>">
-                    <?= htmlspecialchars($hw['NamaHw']); ?>
-                </option>
-            <?php endforeach; ?>
-            <option value="lainnya">+ Others</option>
-        </select>
+                    <!-- Request Type -->
+                    <div class="mb-4">
+                        <label class="form-label fw-medium">Request Type</label>
+                        <select name="JenisRequest" id="jenisRequest" class="form-select" required>
+                            <option value="">Select type</option>
+                            <option value="system">System</option>
+                            <option value="hardware">Infrastructure</option>
+                        </select>
+                    </div>
 
-        <input type="text" name="NamaHw" id="NamaHwBaru"
-               class="form-control mt-2 d-none"
-               placeholder="Enter Infrastuktur name...">
-    </div>
+                    <div id="formLanjutan" class="d-none">
 
-    <div class="mb-3">
-        <label class="form-label d-block">Priority</label>
-        <div class="form-check form-check-inline">
-            <input class="form-check-input" type="radio" name="Prioritas" value="Low">
-            Low
+                        <!-- System -->
+                        <div id="formSystem" class="d-none mb-4">
+                            <label class="form-label fw-medium">Application</label>
+                            <select name="ApkID" id="ApkID" class="form-select">
+                                <option value="">Select application</option>
+                                <?php foreach ($listAplikasi as $apk): ?>
+                                    <option value="<?= $apk['ApkID']; ?>">
+                                        <?= htmlspecialchars($apk['NamaApk']); ?>
+                                    </option>
+                                <?php endforeach; ?>
+                                <option value="lainnya">+ Others</option>
+                            </select>
+
+                            <input type="text" name="NamaApk" id="NamaApkBaru"
+                                   class="form-control mt-2 d-none"
+                                   placeholder="Enter application name">
+                        </div>
+
+                        <!-- Hardware -->
+                        <div id="formHardware" class="d-none mb-4">
+                            <label class="form-label fw-medium">Infrastructure</label>
+                            <select name="HwID" id="HwID" class="form-select">
+                                <option value="">Select infrastructure</option>
+                                <?php foreach ($listHardware as $hw): ?>
+                                    <option value="<?= $hw['HwID']; ?>">
+                                        <?= htmlspecialchars($hw['NamaHw']); ?>
+                                    </option>
+                                <?php endforeach; ?>
+                                <option value="lainnya">+ Others</option>
+                            </select>
+
+                            <input type="text" name="NamaHw" id="NamaHwBaru"
+                                   class="form-control mt-2 d-none"
+                                   placeholder="Enter infrastructure name">
+                        </div>
+
+                        <!-- Priority -->
+                        <div class="mb-4">
+                            <label class="form-label fw-medium d-block">Priority</label>
+                            <div class="d-flex gap-4">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="Prioritas" value="Low">
+                                    <label class="form-check-label">Low</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="Prioritas" value="Normal">
+                                    <label class="form-check-label">Normal</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="Prioritas" value="High">
+                                    <label class="form-check-label">High</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Request -->
+                        <div class="mb-4">
+                            <label class="form-label fw-medium">Request Details</label>
+                            <textarea name="Request" class="form-control" rows="4"
+                                      placeholder="Describe your issue or request"></textarea>
+                        </div>
+
+                        <!-- Upload -->
+                        <div class="mb-4">
+                            <label class="form-label fw-medium">Documentation Image</label>
+                            <input type="file" name="Dokumentasi" id="Dokumentasi"
+                                   class="form-control" accept=".jpg,.jpeg">
+                            <small class="text-muted d-block mt-1">
+                                JPG / JPEG only · Max 2 MB
+                            </small>
+
+                            <img id="previewImg" class="img-thumbnail mt-3 d-none" style="max-width:220px;">
+                        </div>
+
+                    </div>
+                </div>
+
+               <div class="card-footer bg-transparent border-0 text-end px-4 pb-4">
+                <a href="index.php" class="btn btn-outline-secondary me-2">
+                    Cancel
+                </a>
+                <button class="btn btn-dark px-4">
+                    Submit Request
+                </button>
+            </div>
+            </form>
+
         </div>
-        <div class="form-check form-check-inline">
-            <input class="form-check-input" type="radio" name="Prioritas" value="Normal">
-            Normal
-        </div>
-        <div class="form-check form-check-inline">
-            <input class="form-check-input" type="radio" name="Prioritas" value="High">
-            High
-        </div>
     </div>
-
-    <div class="mb-3">
-        <label class="form-label">Request</label>
-        <textarea name="Request" class="form-control"></textarea>
-    </div>
-
-    <div class="mb-3">
-        <label class="form-label">
-            Documentation Image 
-        </label>
-        <input type="file"name="Dokumentasi" id="Dokumentasi" class="form-control" accept=".jpg,.jpeg">
-        <small class="text-muted">
-            <i>Format type: JPG / JPEG (Max. 2 MB)</i>
-        </small>
-        <img id="previewImg" class="img-thumbnail mt-2 d-none" style="max-width:200px;">
-    </div>
-
-    <button class="btn btn-success">Submit</button>
 </div>
-</form>
 <script>
     document.getElementById('jenisRequest').addEventListener('change', function () {
 

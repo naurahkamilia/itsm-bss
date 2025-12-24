@@ -7,7 +7,7 @@ require_once '../helpers/slug.php';
 
 Security::requireAdmin();
 
-$pageTitle = "Add Hardware Data";
+$pageTitle = "Add Infrastructure Data";
 $currentPage = "hardware";
 
 $hardwareModel = new Hardware();
@@ -35,21 +35,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 require_once __DIR__ . '/includes/header.php';
 ?>
 
-<div class="container-fluid py-4">
-    <h2 class="mb-4">Add Hardware</h2>
+<div class="container-fluid py-5">
+    <h2 class="mb-4 fw-semibold text-center">Add Infrastructure</h2>
 
     <?php if (!empty($error)): ?>
-        <div class="alert alert-danger"><?= $error ?></div>
+        <div class="alert alert-danger shadow-sm"><?= $error ?></div>
     <?php endif; ?>
 
-    <form method="POST" class="card p-4 shadow-sm">
+    <form method="POST" class="card p-5 shadow-lg border-0 mx-auto" style="max-width: 600px;">
         <input type="hidden" name="HwID" class="form-control">
-        <div class="mb-3">
-            <label class="form-label">Hardware Name</label>
-            <input type="text" name="NamaHw" class="form-control" required>
+
+        <div class="mb-4">
+            <label class="form-label fw-medium">Infrastructure Name</label>
+            <input type="text" name="NamaHw" class="form-control rounded-3 py-2" placeholder="Enter Infrastructure Name" required>
         </div>
 
-        <button class="btn btn-success">Save</button>
+        <div class="text-end">
+            <a href="hardware-list.php" class="btn btn-secondary rounded-3 px-4 py-2 shadow-sm me-2">
+                Cancel
+            </a>
+            <button class="btn btn-primary rounded-3 px-5 py-2 shadow-sm" type="submit">
+                Save
+            </button>
+        </div>
     </form>
 </div>
 

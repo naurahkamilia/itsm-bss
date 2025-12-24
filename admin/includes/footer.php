@@ -13,9 +13,6 @@
                 <div class="col-md-6 text-md-end">
                     <small class="text-muted">
                         Version <?php echo APP_VERSION; ?>
-                        <?php if (APP_ENV === 'development'): ?>
-                            <span class="badge bg-warning text-dark ms-2">Dev Mode</span>
-                        <?php endif; ?>
                     </small>
                 </div>
             </div>

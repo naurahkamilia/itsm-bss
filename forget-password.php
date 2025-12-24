@@ -12,7 +12,6 @@ $success = '';
 
 $userModel = new User();
 
-/* ✅ WAJIB: Generate captcha saat halaman dibuka */
 if (!isset($_SESSION['captcha'])) {
     Security::generateCaptcha();
 }
@@ -24,24 +23,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $csrfToken = $_POST['csrf_token'] ?? '';
 
     if (!Security::verifyCsrfToken($csrfToken)) {
-        $error = 'Permintaan tidak valid.';
+        $error = 'Invalid request.';
     }
     elseif (!Security::verifyCaptcha($captcha)) {
-        $error = 'Kode captcha tidak valid.';
-        Security::generateCaptcha(); // regenerate jika salah
+        $error = 'Captcha code is incorrect.';
+        Security::generateCaptcha(); 
     }
     elseif (empty($email)) {
-        $error = 'Email harus diisi.';
+        $error = 'Email is required.';
     }
     else {
         $user = $userModel->getByEmail($email);
 
         if (!$user) {
-            $error = 'Email tidak tersedia.';
+            $error = 'Email not found.';
         } 
         else {
             if (!Security::checkForgotPasswordAttempts($email)) {
-                $success = 'Link reset password telah dikirim ke email Anda.';
+                $success = 'A password reset link has been sent to your email.';
                 sleep(1);
             } 
             else {
@@ -63,91 +62,92 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $resetLink = BASE_URL . "reset-password.php?email=$email&token=$token";
                 Mailer::sendResetPassword($email, $resetLink);
 
-                $success = 'Link reset password telah dikirim ke email Anda.';
+                $success = 'A password reset link has been sent to your email.';
             }
         }
     }
 }
 
 include 'includes/header.php';
-?>
-<main class="py-5">
+?><main class="py-5">
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-6 col-lg-5">
 
                 <div class="card shadow-lg border-0">
-                <div class="card-body p-5">
+                    <div class="card-body p-5">
 
-                    <!-- Header -->
-                    <div class="text-center mb-4">
-                        <div class="d-inline-flex align-items-center justify-content-center mb-3"
-                            style="width:100px;height:100px;border-radius:50%;
-                                    background:linear-gradient(135deg,var(--primary-green),var(--primary-blue));">
-                            <i class="bi bi-envelope-paper fs-1 text-white"></i>
-                        </div>
-                        <h2 class="mb-2">Lupa Password</h2>
-                        <p class="text-muted">Masukkan email terdaftar untuk menerima link reset password</p>
-                    </div>
-
-                    <!-- Error -->
-                    <?php if ($error): ?>
-                    <div class="alert alert-danger alert-dismissible fade show">
-                        <i class="bi bi-exclamation-triangle-fill me-2"></i>
-                        <?= htmlspecialchars($error); ?>
-                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                    </div>
-                    <?php endif; ?>
-
-                    <!-- Success -->
-                    <?php if ($success): ?>
-                    <div class="alert alert-success">
-                        <i class="bi bi-check-circle-fill me-2"></i>
-                        <?= htmlspecialchars($success); ?>
-                    </div>
-                    <?php endif; ?>
-
-                    <?php if (!$success): ?>
-                    <form method="POST">
-                    <input type="hidden" name="csrf_token" value="<?= $_SESSION['csrf_token']; ?>">
-
-                    <!-- Email -->
-                    <div class="mb-3">
-                        <label class="form-label">Email</label>
-                        <div class="input-group">
-                            <span class="input-group-text"><i class="bi bi-envelope"></i></span>
-                            <input type="email" class="form-control" name="email"
-                                placeholder="email@example.com" required autofocus>
-                        </div>
-                    </div>
-
-                    <!-- Captcha -->
-                    <div class="mb-4">
-                        <label class="form-label">Kode Keamanan</label>
-                        <div class="d-flex gap-2 mb-2">
-                            <div class="captcha-box flex-grow-1" id="captcha-display">
-                               <?= $_SESSION['captcha'] ?? ''; ?>
+                        <!-- Header -->
+                        <div class="text-center mb-4">
+                            <div class="d-inline-flex align-items-center justify-content-center mb-3"
+                                style="width:100px;height:100px;border-radius:50%;
+                                        background: #89919cff">
+                                <i class="bi bi-envelope-paper fs-1 text-white"></i>
                             </div>
-                            <button type="button" class="btn btn-outline-secondary" onclick="refreshCaptcha()">
-                                <i class="bi bi-arrow-clockwise"></i>
-                            </button>
+                            <h2 class="mb-2">Forgot Password</h2>
+                            <p class="text-muted">Enter your registered email to receive a password reset link</p>
                         </div>
-                        <input type="text" class="form-control" name="captcha"
-                            placeholder="Masukkan kode di atas" required autocomplete="off">
-                    </div>
 
-                    <div class="d-grid">
-                        <button class="btn btn-gradient btn-lg">
-                            <i class="bi bi-envelope-paper me-2"></i>
-                            Kirim Link Reset
-                        </button>
-                    </div>
-                    </form>
-                    <?php endif; ?>
+                        <!-- Error -->
+                        <?php if ($error): ?>
+                        <div class="alert alert-danger alert-dismissible fade show">
+                            <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                            <?= htmlspecialchars($error); ?>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                        <?php endif; ?>
 
-                    <div class="text-center mt-3">
-                        <a href="index.php"><small>Kembali ke Login</small></a>
-                    </div>
+                        <!-- Success -->
+                        <?php if ($success): ?>
+                        <div class="alert alert-success">
+                            <i class="bi bi-check-circle-fill me-2"></i>
+                            <?= htmlspecialchars($success); ?>
+                        </div>
+                        <?php endif; ?>
+
+                        <?php if (!$success): ?>
+                        <form method="POST">
+                            <input type="hidden" name="csrf_token" value="<?= $_SESSION['csrf_token']; ?>">
+
+                            <!-- Email -->
+                            <div class="mb-3">
+                                <label class="form-label">Email</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+                                    <input type="email" class="form-control" name="email"
+                                        placeholder="email@example.com" required autofocus>
+                                </div>
+                            </div>
+
+                            <!-- Captcha -->
+                            <div class="mb-4">
+                                <label class="form-label">Security Code</label>
+                                <div class="d-flex gap-2 mb-2">
+                                    <div class="captcha-box flex-grow-1" id="captcha-display">
+                                        <?= $_SESSION['captcha'] ?? ''; ?>
+                                    </div>
+                                    <button type="button" class="btn btn-outline-secondary" onclick="refreshCaptcha()">
+                                        <i class="bi bi-arrow-clockwise"></i>
+                                    </button>
+                                </div>
+                                <input type="text" class="form-control" name="captcha"
+                                    placeholder="Enter the code above" required autocomplete="off">
+                            </div>
+
+                            <div class="d-grid">
+                                <button class="btn btn-dark btn-lg">
+                                    <i class="bi bi-envelope-paper me-2"></i>
+                                    Send Reset Link
+                                </button>
+                            </div>
+                        </form>
+                        <?php endif; ?>
+
+                        <div class="text-center mt-3">
+                            <a href="index.php" class="text-decoration-none" style="color:#555;">
+                                <u><small>Back to Login</small></u>
+                            </a>
+                        </div>
 
                     </div>
                 </div>

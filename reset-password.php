@@ -58,51 +58,67 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 include 'includes/header.php';
 ?>
-
-<main class="py-5">
+<main class="py-5" style="background-color:#f8f9fa; min-height:100vh;">
 <div class="container">
-<div class="row justify-content-center">
-<div class="col-md-6 col-lg-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5">
 
-<div class="card shadow-lg border-0">
-<div class="card-body p-5">
+            <div class="card shadow-sm border-0 rounded-4">
+                <div class="card-body p-4">
 
-<h3 class="text-center mb-3">Reset Password</h3>
+                    <div class="text-center mb-4">
+                        <i class="bi bi-key-fill fs-2 text-dark mb-2"></i>
+                        <h4 class="mb-1" style="color:#212529;">Reset Password</h4>
+                        <p class="text-muted small mb-0">Enter your new password</p>
+                    </div>
 
-<?php if ($error): ?>
-<div class="alert alert-danger"><?= $error ?></div>
-<?php endif; ?>
+                    <!-- Error -->
+                    <?php if ($error): ?>
+                    <div class="alert alert-danger alert-dismissible fade show">
+                        <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                        <?= htmlspecialchars($error) ?>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                    <?php endif; ?>
 
-<?php if ($success): ?>
-<div class="alert alert-success">
-    <?= $success ?><br>
-    <a href="index.php">Login</a>
-</div>
-<?php else: ?>
+                    <!-- Success -->
+                    <?php if ($success): ?>
+                    <div class="alert alert-success">
+                        <i class="bi bi-check-circle-fill me-2"></i>
+                        <?= htmlspecialchars($success) ?><br>
+                        <a href="index.php" class="text-decoration-none">Login</a>
+                    </div>
+                    <?php else: ?>
 
-<form method="POST">
+                    <form method="POST">
 
-<div class="mb-3">
-    <label>Password Baru</label>
-    <input type="password" name="password" class="form-control" required>
-</div>
+                        <div class="mb-3">
+                            <label class="form-label" style="color:#212529;">New Password</label>
+                            <input type="password" name="password" class="form-control" placeholder="Enter New Password" required>
+                        </div>
 
-<div class="mb-3">
-    <label>Konfirmasi Password</label>
-    <input type="password" name="password_confirm" class="form-control" required>
-</div>
+                        <div class="mb-3">
+                            <label class="form-label" style="color:#212529;">Confirm Password</label>
+                            <input type="password" name="password_confirm" class="form-control" placeholder="Confirm New Password" required>
+                        </div>
 
-<button class="btn btn-gradient w-100">
-    Simpan Password Baru
-</button>
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-dark rounded-3 py-2">
+                                Save New Password
+                            </button>
+                        </div>
+                    </form>
+                    <?php endif; ?>
 
-</form>
-<?php endif; ?>
+                    <div class="text-center mt-3">
+                        <a href="index.php" class="text-decoration-none text-muted">
+                            <u><small>Back to Login</small></a></u>
+                    </div>
 
-</div>
-</div>
+                </div>
+            </div>
 
-</div>
-</div>
+        </div>
+    </div>
 </div>
 </main>
