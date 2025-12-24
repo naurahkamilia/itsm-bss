@@ -43,13 +43,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $ReqID      = (int) $_POST['ReqID'];
     $NIK        = (int) $_SESSION['user_id'];
     $Catatan    = !empty($_POST['Catatan']) ? trim($_POST['Catatan']) : null;
-    $LinkApk    = !empty($_POST['LinkApk']) ? trim($_POST['LinkApk']) : null;
     $TglSelesai = date('Y-m-d H:i:s');
 
     // --- Update saja record existing ---
     $dataToUpdate = [
         'Catatan'    => $Catatan,
-        'LinkApk'    => $LinkApk,
         'TglSelesai' => $TglSelesai
     ];
 
@@ -161,80 +159,79 @@ function renderReviewBadge($status) {
 
 require_once __DIR__ . '/includes/header.php';
 ?>
-<div class="container-fluid py-4">
-
-    <?php if ($requestDetail): ?>
-        <div class="card mb-4 shadow-sm">
-            <div class="card-header bg-success text-white">
-                <div class="d-flex justify-content-between">
-                <h5 class="mb-0">Request Details</h5>
-                    <a href="karyawan-list.php" class="btn btn-secondary">
+<div class="container-fluid py-5">
+    <div class="mx-auto" style="max-width: 800px;"> <!-- wrapper max-width -->
+        
+        <?php if ($requestDetail): ?>
+            <div class="card mb-4 shadow-sm border-0">
+                <div class="card-header bg-light text-dark d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0 fw-semibold">Request Details</h5>
+                    <a href="request-list.php" class="btn btn-outline-secondary rounded-3 px-3 py-1">
                         <i class="bi bi-arrow-left"></i> Back
                     </a>
                 </div>
+                <div class="card-body">
+                    <p><strong>Request Date:</strong> <?= htmlspecialchars($requestDetail['Tgl_request']); ?></p>
+                    <p><strong>User:</strong> <?= htmlspecialchars($requestDetail['name']); ?></p>
+                    <p><strong>Department:</strong> <?= htmlspecialchars($requestDetail['Departemen']); ?></p>
+                    <p><strong>Application / Hardware Name:</strong> <?= 
+                        htmlspecialchars($requestDetail['NamaApk'] ?? $requestDetail['NamaHw'] ?? '-'); 
+                    ?></p>
+                    <p><strong>Priority:</strong> <?= htmlspecialchars($requestDetail['Prioritas']); ?></p>
+                    <p><strong>Status:</strong> <?= renderStatusBadge($requestDetail['StatusReq']); ?></p>
+                    <p><strong>Description:</strong> <?= htmlspecialchars($requestDetail['Request']); ?></p>
+
+                    <?php if ($reviewData): ?>
+                        <hr>
+                        <p><strong>Review Status:</strong> <?= renderReviewBadge($reviewData['Status']); ?></p>
+                        <p><strong>Comment:</strong> <?= htmlspecialchars($reviewData['Komentar'] ?? '-'); ?></p>
+                        <p><strong>Date:</strong> <?= htmlspecialchars($reviewData['Tanggal'] ?? '-'); ?></p>
+                    <?php endif; ?>
+                </div>
+            </div>
+        <?php endif; ?>
+
+        <?php if ($error): ?>
+            <div class="alert alert-danger shadow-sm"><?= htmlspecialchars($error) ?></div>
+        <?php endif; ?>
+
+        <div class="card shadow-sm border-0">
+            <div class="card-header bg-light text-dark">
+                <h5 class="mb-0 fw-semibold">Complete Request Form</h5>
             </div>
             <div class="card-body">
-                <p><strong>Request Date:</strong> <?= htmlspecialchars($requestDetail['Tgl_request']); ?></p>
-                <p><strong>User:</strong> <?= htmlspecialchars($requestDetail['name']); ?></p>
-                <p><strong>Department:</strong> <?= htmlspecialchars($requestDetail['Departemen']); ?></p>
-                <p><strong>Application / Hardware Name:</strong> <?= 
-                    htmlspecialchars($requestDetail['NamaApk'] ?? $requestDetail['NamaHw'] ?? '-'); 
-                ?></p>
-                <p><strong>Priority:</strong> <?= htmlspecialchars($requestDetail['Prioritas']); ?></p>
-                <p><strong>Status:</strong> <?= renderStatusBadge($requestDetail['StatusReq']); ?></p>
-                <p><strong>Description:</strong> <?= htmlspecialchars($requestDetail['Request']); ?></p>
+                <form method="POST">
+                    <input type="hidden" name="ReqID" value="<?= htmlspecialchars($reqID); ?>">
+                    <input type="hidden" name="TglSelesai" value="<?= date('Y-m-d H:i:s'); ?>">
 
-                <?php if ($reviewData): ?>
-                    <hr>
-                    <p><strong>Review Status:</strong> <?= renderReviewBadge($reviewData['Status']); ?></p>
-                    <p><strong>Comment:</strong> <?= htmlspecialchars($reviewData['Komentar'] ?? '-'); ?></p>
-                    <p><strong>Date:</strong> <?= htmlspecialchars($reviewData['Tanggal'] ?? '-'); ?></p>
-                <?php endif; ?>
+                    <div class="mb-4">
+                        <label class="form-label fw-medium">Notes / Description</label>
+                        <textarea name="Catatan" class="form-control rounded-3 py-2" rows="4" placeholder="Optional notes" required><?= htmlspecialchars($finishData['Catatan'] ?? '') ?></textarea>
+                    </div>
+
+                    <?php if (!empty($finishData['MulaiKerja']) && !empty($finishData['Deadline'])): ?>
+                        <div class="mb-4">
+                            <label class="form-label fw-medium">Time Left</label>
+                            <div id="countdown" class="fw-bold text-danger"></div>
+                        </div>
+                    <?php endif; ?>
+
+                    <div class="d-flex justify-content-between">
+                        <a href="karyawan-list.php" class="btn btn-outline-secondary rounded-3 px-4 py-2 shadow-sm">
+                            <i class="bi bi-arrow-left"></i> Back
+                        </a>
+                        <button class="btn btn-primary rounded-3 px-5 py-2 shadow-sm" id="btnSubmit" type="submit">
+                            <i class="bi bi-floppy-fill"></i> Submit
+                        </button>
+                    </div>
+                </form>
             </div>
         </div>
-    <?php endif; ?>
 
-    <?php if ($error): ?>
-        <div class="alert alert-danger"><?= htmlspecialchars($error) ?></div>
-    <?php endif; ?>
-
-    <div class="card shadow-sm">
-        <div class="card-header bg-secondary text-white">
-            <h5 class="mb-0">Complete Request Form</h5>
-        </div>
-        <div class="card-body">
-            <form method="POST">
-    <input type="hidden" name="ReqID" value="<?= htmlspecialchars($reqID); ?>">
-    <input type="hidden" name="TglSelesai" value="<?= date('Y-m-d H:i:s'); ?>">
-
-    <div class="mb-3">
-        <label class="form-label">Notes / Description</label>
-        <textarea name="Catatan" class="form-control" rows="4" placeholder="Optional notes" required><?= htmlspecialchars($finishData['Catatan'] ?? '') ?></textarea>
-    </div>
-
-    <div class="mb-3">
-        <label class="form-label">Proof Link (e.g., APK / Document)</label>
-        <input type="url" name="LinkApk" class="form-control" 
-            placeholder="https://example.com/..." 
-            value="<?= htmlspecialchars($finishData['LinkApk'] ?? '') ?>">
-    </div>
-
-    <?php if (!empty($finishData['MulaiKerja']) && !empty($finishData['Deadline'])): ?>
-        <div class="mb-3">
-            <label class="form-label">Time Left</label>
-            <div id="countdown" class="fw-bold text-danger"></div>
-        </div>
-    <?php endif; ?>
-
-    <div class="d-flex justify-content-end">
-        <button class="btn btn-success" id="btnSubmit">
-            <i class="bi bi-floppy-fill"></i> Submit
-        </button>
-    </div>
-</form>
+    </div> <!-- wrapper end -->
 </div>
-    </div>
-</div>
+
+
 
 <?php if (!empty($finishData['Deadline'])): ?>
 <script>

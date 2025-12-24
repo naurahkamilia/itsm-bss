@@ -35,21 +35,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 require_once __DIR__ . '/includes/header.php';
 ?>
 
-<div class="container-fluid py-4">
-    <h2 class="mb-4">Add Application</h2>
+<div class="container-fluid py-5">
+    <h2 class="mb-4 fw-semibold text-center">Add Application</h2>
 
     <?php if (!empty($error)): ?>
-        <div class="alert alert-danger"><?= $error ?></div>
+        <div class="alert alert-danger shadow-sm"><?= $error ?></div>
     <?php endif; ?>
 
-    <form method="POST" class="card p-4 shadow-sm">
+    <form method="POST" class="card p-5 shadow-lg border-0 mx-auto" style="max-width: 600px;">
         <input type="hidden" name="ApkID" class="form-control">
-        <div class="mb-3">
-            <label class="form-label">Application Name</label>
-            <input type="text" name="NamaApk" class="form-control" required>
+
+        <div class="mb-4">
+            <label class="form-label fw-medium">Application Name</label>
+            <input type="text" name="NamaApk" class="form-control rounded-3 py-2" placeholder="Enter Application Name" required>
         </div>
 
-        <button class="btn btn-success">Save</button>
+        <div class="text-end">
+            <a href="aplikasi.php" class="btn btn-secondary rounded-3 px-4 py-2 shadow-sm me-2">
+                Cancel
+            </a>
+            <button class="btn btn-primary rounded-3 px-5 py-2 shadow-sm" type="submit">
+                Save
+            </button>
+        </div>
     </form>
 </div>
 
