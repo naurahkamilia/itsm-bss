@@ -30,28 +30,20 @@ class Mailer {
             $mail->Subject = 'Reset Password ITSM';
 
             $mail->Body = "
-               <h3>Reset Your Password</h3>
-                <p>Hello,</p>
-                <p>We received a request to reset the password for your account associated with this email address. If you did not request a password reset, please ignore this message.</p>
-
-                <p>To reset your password, click the button below:</p>
+                <h3>Reset Password</h3>
+                <p>Kami menerima permintaan reset password akun Anda.</p>
                 <p>
-                    <a href='{$resetLink}' style='color:#0d6efd; text-decoration:underline; font-family:Arial, sans-serif;'>
-                    Click here to reset your password
+                    <a href='{$resetLink}'
+                       style='background:#0d6efd;color:#fff;
+                              padding:10px 20px;
+                              text-decoration:none;
+                              border-radius:5px;'>
+                       Reset Password
                     </a>
                 </p>
-
-                <p>This link is valid for <b>30 minutes</b>. After that, you will need to request a new password reset link.</p>
-
-                <p>For your security, please do not share this link with anyone.</p>
-
-                <p>If you did not initiate this request, you can safely ignore this email and your account will remain secure.</p>
-
-                <p>Thank you for using <b>" . APP_NAME . "</b>.</p>
-
-                <p>Best regards,<br>
-                The " . APP_NAME . " Team</p>
-                ";
+                <p>Link ini berlaku selama <b>30 menit</b>.</p>
+                <p>Jika bukan Anda, abaikan email ini.</p>
+            ";
 
             return $mail->send();
 

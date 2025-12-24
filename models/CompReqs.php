@@ -57,6 +57,7 @@ class Comp {
     public function updateByReqID($reqID, $data) {
     $sql = "UPDATE request_completion SET 
                 Catatan = :Catatan, 
+                LinkApk = :LinkApk, 
                 EstWaktu = :EstWaktu, 
                 TglSelesai = :TglSelesai 
             WHERE ReqID = :ReqID";
@@ -65,6 +66,7 @@ class Comp {
     // pastikan semua key ada
     $params = [
         ':Catatan'    => $data['Catatan'] ?? null,
+        ':LinkApk'    => $data['LinkApk'] ?? null,
         ':EstWaktu'   => $data['EstWaktu'] ?? null,
         ':TglSelesai' => $data['TglSelesai'] ?? date('Y-m-d H:i:s'),
         ':ReqID'      => $reqID
@@ -89,8 +91,8 @@ class Comp {
 
     public function create($data) {
         $sql = "INSERT INTO request_completion (ReqID, NIK, TglSelesai, Catatan,
-            	 EstWaktu) VALUES (:ReqID, :NIK, :TglSelesai, :Catatan,
-            	:EstWaktu)";
+            	LinkApk, EstWaktu) VALUES (:ReqID, :NIK, :TglSelesai, :Catatan,
+            	:LinkApk, :EstWaktu)";
 
         $stmt = $this->db->prepare($sql);
         return $stmt->execute([
@@ -98,6 +100,7 @@ class Comp {
             ':NIK' => $data['NIK'],
             ':TglSelesai' => $data['TglSelesai'],
             ':Catatan' => $data['Catatan'],
+            ':LinkApk' => $data['LinkApk'],
             ':EstWaktu' => $data['EstWaktu']
         ]);
     }
@@ -107,6 +110,7 @@ class Comp {
         $sql = "UPDATE request_completion 
                 SET TglSelesai = :TglSelesai,
                     Catatan = :Catatan,
+                    LinkApk = :LinkApk,
                     EstWaktu = :EstWaktu
                 WHERE ComptID = :ComptID";
 
@@ -114,6 +118,7 @@ class Comp {
         return $stmt->execute([
             ':TglSelesai' => $data['TglSelesai'],
             ':Catatan'    => $data['Catatan'],
+            ':LinkApk'    => $data['LinkApk'],
             ':EstWaktu'   => $data['EstWaktu'],
             ':ComptID'    => (int)$CID
         ]);

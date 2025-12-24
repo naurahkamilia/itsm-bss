@@ -41,56 +41,46 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 require_once __DIR__ . '/includes/header.php';
 ?>
 
-<div class="container-fluid py-5">
-    <h2 class="mb-4 fw-semibold text-center">Add User</h2>
+<div class="container-fluid py-4">
+    <h2 class="mb-4">Tambah User</h2>
 
     <?php if (!empty($error)): ?>
-        <div class="alert alert-danger shadow-sm"><?= $error ?></div>
+        <div class="alert alert-danger"><?= $error ?></div>
     <?php endif; ?>
 
-    <form method="POST" class="card p-5 shadow-lg border-0 mx-auto" style="max-width: 600px;">
-        <div class="mb-4">
-            <label class="form-label fw-medium">NIK</label>
-            <input type="text" id="nik" name="NIK" class="form-control rounded-3 py-2" required>
+    <form method="POST" class="card p-4 shadow-sm">
+        <div class="mb-3">
+            <label class="form-label">NIK</label>
+            <input type="text" id="nik" name="NIK" class="form-control" required>
         </div>
 
-        <div class="mb-4">
-            <label class="form-label fw-medium">User Name</label>
-            <input type="text" id="nama" name="name" class="form-control rounded-3 py-2" readonly>
+        <div class="mb-3">
+            <label class="form-label">Nama</label>
+            <input type="text" id="nama" name="name" class="form-control" readonly>
         </div>
 
-        <div class="mb-4">
-            <label class="form-label fw-medium">Email</label>
-            <input type="email" name="email" class="form-control rounded-3 py-2" required>
+        <div class="mb-3">
+            <label class="form-label">Email</label>
+            <input type="text" name="email" class="form-control" required>
         </div>
 
-        <div class="mb-4">
-            <label class="form-label fw-medium d-block">Role</label>
+        <div class="mb-3">
+        <label class="form-label d-block">Role</label>
 
-            <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="role" value="admin" required>
-                <label class="form-check-label">Admin</label>
-            </div>
-
-            <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="role" value="customer" required>
-                <label class="form-check-label">User</label>
-            </div>
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="role" value="admin" required>
+            <label class="form-check-label">Admin</label>
         </div>
 
-        <div class="text-end">
-            <a href="user-list.php" class="btn btn-secondary rounded-3 px-4 py-2 shadow-sm me-2">
-                Back
-            </a>
-            <button class="btn btn-primary rounded-3 px-5 py-2 shadow-sm" type="submit">
-                Simpan
-            </button>
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="role" value="customer" required>
+            <label class="form-check-label">Customer</label>
         </div>
+    </div>
+
+        <button class="btn btn-success">Simpan</button>
     </form>
 </div>
-
-<?php require_once __DIR__ . '/includes/footer.php'; ?>
-
 
 <script>
     document.getElementById('nik').addEventListener('keyup', function(){

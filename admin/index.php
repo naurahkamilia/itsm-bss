@@ -34,121 +34,127 @@ include 'includes/header.php';
     <div class="row mb-4">
         <div class="col-12">
             <h2>Welcome, <?php echo htmlspecialchars($_SESSION['user_name']); ?>!</h2>
-             <p class="page-subtitle">
-                    Overview of today’s IT service requests
-                </p>
         </div>
     </div>
 
-<div class="row g-3 mb-5">
-
-    <div class="col-12 col-md-6 col-lg">
-        <div class="card border-0 shadow-sm h-100">
-            <div class="card-body">
-                <div class="d-flex align-items-center">
-                    <div class="bg-primary bg-opacity-10 p-3 rounded">
-                        <i class="bi bi-envelope-arrow-down-fill text-primary fs-2"></i>
-                    </div>
-                    <div class="ms-3">
-                        <h6 class="text-muted mb-1">Request Today</h6>
-                        <h3 class="mb-0"><?= $todayReq; ?></h3>
+    <div class="row g-1 mb-5">
+        <div class="col-md-6 col-lg-2">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-shrink-0">
+                            <div class="bg-primary bg-opacity-10 p-3 rounded">
+                                <i class="bi bi-envelope-arrow-down-fill text-secondary fs-2"></i>
+                            </div>
+                        </div>
+                        <div class="flex-grow-1 ms-3">
+                            <h6 class="text-muted mb-1">Request Today</h6>
+                            <h3 class="mb-0"><h3><?php echo $todayReq; ?></h3>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="card-footer bg-transparent border-0 text-end">
-                <a href="request-list.php?tanggal_dari=<?= date('Y-m-d') ?>" class="small text-decoration-none">
-                    View All <i class="bi bi-arrow-right ms-1"></i>
-                </a>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-12 col-md-6 col-lg">
-        <div class="card border-0 shadow-sm h-100">
-            <div class="card-body">
-                <div class="d-flex align-items-center">
-                    <div class="bg-danger bg-opacity-10 p-3 rounded">
-                        <i class="bi bi-x-circle text-danger fs-2"></i>
-                    </div>
-                    <div class="ms-3">
-                        <h6 class="text-muted mb-1">Rejected</h6>
-                        <h3 class="mb-0"><?= $rejectReq; ?></h3>
-                    </div>
+                <div class="card-footer bg-transparent border-0 d-flex justify-content-end align-items-center">
+                    <a href="request-list.php?tanggal_dari=<?= date('Y-m-d') ?>" class="text-decoration-none small">
+                        View All <i class="bi bi-arrow-right ms-1"></i>
+                    </a>
                 </div>
             </div>
-            <div class="card-footer bg-transparent border-0 text-end">
-                <a href="request-list.php?StatusReq=Ditolak" class="small text-decoration-none">
-                    View All <i class="bi bi-arrow-right ms-1"></i>
-                </a>
-            </div>
         </div>
-    </div>
 
-    <div class="col-12 col-md-6 col-lg">
-        <div class="card border-0 shadow-sm h-100">
-            <div class="card-body">
-                <div class="d-flex align-items-center">
-                    <div class="bg-warning bg-opacity-10 p-3 rounded">
-                        <i class="bi bi-hourglass-split text-warning fs-2"></i>
-                    </div>
-                    <div class="ms-3">
-                        <h6 class="text-muted mb-1">In Progress</h6>
-                        <h3 class="mb-0"><?= $progressReq; ?></h3>
+        <div class="col-md-6 col-lg-2">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-shrink-0">
+                            <div class="bg-primary bg-opacity-10 p-3 rounded">
+                                <i class="bi bi-envelope-arrow-down-fill text-secondary fs-2"></i>
+                            </div>
+                        </div>
+                        <div class="flex-grow-1 ms-3">
+                            <h6 class="text-muted mb-1">Rejected</h6>
+                            <h3 class="mb-0"><h3><?php echo $rejectReq; ?></h3>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="card-footer bg-transparent border-0 text-end">
-                <a href="request-list.php?StatusReq=Antrian" class="small text-decoration-none">
-                    View All <i class="bi bi-arrow-right ms-1"></i>
-                </a>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-12 col-md-6 col-lg">
-        <div class="card border-0 shadow-sm h-100">
-            <div class="card-body">
-                <div class="d-flex align-items-center">
-                    <div class="bg-success bg-opacity-10 p-3 rounded">
-                        <i class="bi bi-check-circle text-success fs-2"></i>
-                    </div>
-                    <div class="ms-3">
-                        <h6 class="text-muted mb-1">Finished</h6>
-                        <h3 class="mb-0"><?= $doneReq; ?></h3>
-                    </div>
+                <div class="card-footer bg-transparent border-0 d-flex justify-content-end align-items-center">
+                    <a href="request-list.php?StatusReq=Ditolak" class="text-decoration-none small">
+                        View All <i class="bi bi-arrow-right ms-1"></i>
+                    </a>
                 </div>
             </div>
-            <div class="card-footer bg-transparent border-0 text-end">
-                <a href="request-list.php?StatusReq=Selesai" class="small text-decoration-none">
-                    View All <i class="bi bi-arrow-right ms-1"></i>
-                </a>
-            </div>
         </div>
-    </div>
 
-    <div class="col-12 col-md-6 col-lg">
-        <div class="card border-0 shadow-sm h-100">
-            <div class="card-body">
-                <div class="d-flex align-items-center">
-                    <div class="bg-primary bg-opacity-10 p-3 rounded">
-                        <i class="bi bi-collection text-primary fs-2"></i>
-                    </div>
-                    <div class="ms-3">
-                        <h6 class="text-muted mb-1">Total Request</h6>
-                        <h3 class="mb-0"><?= $totalReqs; ?></h3>
+        <!-- Active Products -->
+        <div class="col-md-6 col-lg-2">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-shrink-0">
+                            <div class="bg-success bg-opacity-10 p-3 rounded">
+                                <i class="bi bi-hourglass-bottom text-warning fs-2"></i>
+                            </div>
+                        </div>
+                        <div class="flex-grow-1 ms-3">
+                            <h6 class="text-muted mb-1">In Progress</h6>
+                            <h3 class="mb-0"><?php echo $progressReq; ?></h3>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="card-footer bg-transparent border-0 text-end">
-                <a href="request-list.php" class="small text-decoration-none">
-                    View All <i class="bi bi-arrow-right ms-1"></i>
-                </a>
+                <div class="card-footer bg-transparent border-0 d-flex justify-content-end align-items-center">
+                    <a href="request-list.php?StatusReq=Antrian" class="text-decoration-none small">
+                        View All <i class="bi bi-arrow-right ms-1"></i>
+                    </a>
+                </div>
             </div>
         </div>
-    </div>
 
-</div>
+        <!-- Inactive Products -->
+        <div class="col-md-6 col-lg-2">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-shrink-0">
+                            <div class="bg-warning bg-opacity-10 p-3 rounded">
+                                <i class="bi bi-check-circle text-success fs-2"></i>
+                            </div>
+                        </div>
+                        <div class="flex-grow-1 ms-3">
+                            <h6 class="text-muted mb-1">Finished</h6>
+                            <h3 class="mb-0"><?php echo $doneReq; ?></h3>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer bg-transparent border-0 d-flex justify-content-end align-items-center">
+                    <a href="request-list.php?StatusReq=Selesai" class="text-decoration-none small">
+                        View All <i class="bi bi-arrow-right ms-1"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
 
+        <div class="col-md-6 col-lg-2">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-shrink-0">
+                            <div class="bg-primary bg-opacity-10 p-3 rounded">
+                                <i class="bi bi-box-seam text-primary fs-2"></i>
+                            </div>
+                        </div>
+                        <div class="flex-grow-1 ms-3">
+                            <h6 class="text-muted mb-1">Total Request</h6>
+                            <h3 class="mb-0"><h3><?= $totalReqs; ?></h3>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer bg-transparent border-0 d-flex justify-content-end align-items-center">
+                    <a href="request-list.php" class="text-decoration-none small">
+                        View All <i class="bi bi-arrow-right ms-1"></i>
+                    </a>
+                </div>
+                </div>
+            </div>
+        </div>
 
     <!-- Recent Products -->
     <div class="row">
@@ -192,7 +198,7 @@ include 'includes/header.php';
                                     </td>
                                     <td>
                                     <a href="finish-request.php?ReqID=<?= $rq['ReqID']; ?>" 
-                                    class="btn btn-sm btn-outline-dark" 
+                                    class="btn btn-sm btn-dark" 
                                     title="Mark Program as Completed">
                                         <i class="bi bi-pencil"></i>
                                     </a>

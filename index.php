@@ -43,16 +43,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
     // Verify captcha
     elseif (!Security::verifyCaptcha($captcha)) {
-        $error = 'Captcha code is invalid.';
+        $error = 'Kode captcha tidak valid.';
         Security::generateCaptcha(); // Generate new captcha
     }
     // Check rate limiting
     elseif (!Security::checkLoginAttempts($email)) {
-        $error = 'Too many login attempts. Please try again in ' . (LOGIN_TIMEOUT / 60) . ' minutes.';
+        $error = 'Terlalu banyak percobaan login. Silakan coba lagi dalam ' . (LOGIN_TIMEOUT / 60) . ' menit.';
     }
     // Validate input
     elseif (empty($email) || empty($password)) {
-        $error = 'Email and password are required.';
+        $error = 'Email dan password harus diisi.';
         Security::recordLoginAttempt($email);
     }
     // Attempt login
@@ -76,43 +76,42 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             session_regenerate_id(true);
 
             if($user['role'] === 'admin'){
-                $_SESSION['success_message'] = 'Welcome, '. $user['name'] . '!';
+                $_SESSION['success_message'] = 'Selamat datang, '. $user['name'] . '!';
                 header('Location: '.BASE_URL.'admin/');
                 exit;
             }elseif($user['role'] === 'customer'){
-                $_SESSION['success_message'] = 'Welcome, ' . $user['name'] . '!';
+                $_SESSION['success_message'] = 'Selamat datang, ' . $user['name'] . '!';
                 header('Location: ' . BASE_URL . 'user/');
                 exit;
             }else{
-                $error = 'Invalid role.';
+                $error = 'Role tidak valid.';
                 Security::recordLoginAttempt($email);
             }
         }else{
-            $error = 'Incorrect email or password.';
+            $error = 'Email atau password salah.';
             Security::recordLoginAttempt($email);
         }
         Security::generateCaptcha();
-    }
-}
+    }}
 
 include 'includes/header.php';
 ?>
 
-<main class="py-5" style="background-color:#f8f9fa; min-height:100vh;">
+<main class="py-5">
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-6 col-lg-5">
                 <!-- Login Card -->
-                <div class="card shadow-sm border-0" style="border-radius:12px;">
+                <div class="card shadow-lg border-0">
                     <div class="card-body p-5">
                         <!-- Header -->
                         <div class="text-center mb-4">
                             <div class="d-inline-flex align-items-center justify-content-center mb-3"
-                                 style="width: 100px; height: 100px; border-radius: 50%; background-color: #89919cff;">
+                                 style="width: 100px; height: 100px; border-radius: 50%; background: linear-gradient(135deg, var(--primary-green) 0%, var(--primary-blue) 100%);">
                                 <i class="bi bi-lock-fill fs-1 text-white"></i>
                             </div>
-                            <h2 class="mb-2" style="color:#000;">Login</h2>
-                            <p class="text-muted" style="color:#555;">Enter your credentials to access your account</p>
+                            <h2 class="mb-2">Login</h2>
+                            <p class="text-muted">Masukkan kredensial Anda untuk mengakses panel admin</p>
                         </div>
 
                         <!-- Error Message -->
@@ -127,10 +126,10 @@ include 'includes/header.php';
                         <!-- Login Form -->
                         <form method="POST" action="">
                             <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
-
+                            
                             <!-- Email -->
                             <div class="mb-3">
-                                <label for="email" class="form-label" style="color:#000;">Email</label>
+                                <label for="email" class="form-label">Email</label>
                                 <div class="input-group">
                                     <span class="input-group-text">
                                         <i class="bi bi-envelope"></i>
@@ -141,14 +140,13 @@ include 'includes/header.php';
                                            name="email" 
                                            placeholder="email@example.com"
                                            value="<?php echo htmlspecialchars($email ?? ''); ?>"
-                                           required
-                                           style="border-radius:6px;">
+                                           required>
                                 </div>
                             </div>
 
                             <!-- Password -->
                             <div class="mb-3">
-                                <label for="password" class="form-label" style="color:#000;">Password</label>
+                                <label for="password" class="form-label">Password</label>
                                 <div class="input-group">
                                     <span class="input-group-text">
                                         <i class="bi bi-key"></i>
@@ -158,8 +156,7 @@ include 'includes/header.php';
                                            id="password" 
                                            name="password" 
                                            placeholder="••••••••"
-                                           required
-                                           style="border-radius:6px;">
+                                           required>
                                     <button class="btn btn-outline-secondary" 
                                             type="button"
                                             onclick="togglePassword('password', 'toggleIcon')">
@@ -170,30 +167,34 @@ include 'includes/header.php';
 
                             <!-- Captcha -->
                             <div class="mb-4">
-                                <label for="captcha" class="form-label" style="color:#000;">Security Code (Captcha)</label>
+                                <label for="captcha" class="form-label">Kode Keamanan (Captcha)</label>
                                 
+                                <!-- Captcha Display -->
                                 <div class="d-flex gap-2 mb-2">
-                                    <div class="captcha-box flex-grow-1 text-center" id="captcha-display" style="background:#e9ecef; border-radius:6px; padding:0.5rem; font-weight:600; letter-spacing:3px;">
+                                    <div class="captcha-box flex-grow-1" id="captcha-display">
                                         <?php echo $_SESSION['captcha']; ?>
                                     </div>
-                                    <button type="button" class="btn btn-outline-secondary" onclick="refreshCaptcha()" title="Refresh Captcha">
+                                    <button type="button" 
+                                            class="btn btn-outline-secondary"
+                                            onclick="refreshCaptcha()"
+                                            title="Refresh Captcha">
                                         <i class="bi bi-arrow-clockwise"></i>
                                     </button>
                                 </div>
                                 
+                                <!-- Captcha Input -->
                                 <input type="text" 
                                        class="form-control" 
                                        id="captcha" 
                                        name="captcha" 
-                                       placeholder="Enter the code above"
+                                       placeholder="Masukkan kode di atas"
                                        required
-                                       autocomplete="off"
-                                       style="border-radius:6px;">
+                                       autocomplete="off">
                             </div>
 
                             <!-- Submit Button -->
                             <div class="d-grid mb-3">
-                                <button type="submit" class="btn btn-dark btn-lg" style="border-radius:6px;">
+                                <button type="submit" class="btn btn-gradient btn-lg">
                                     <i class="bi bi-box-arrow-in-right me-2"></i>
                                     Login
                                 </button>
@@ -201,33 +202,31 @@ include 'includes/header.php';
 
                             <!-- Reset Password Link -->
                             <div class="text-center">
-                                <a href="forget-password.php" class="text-decoration-none" style="color:#555;">
-                                    <u><small>Forgot password? Reset here</small></u>
+                                <a href="forget-password.php" class="text-decoration-none">
+                                    <small>Lupa password? Reset di sini</small>
                                 </a>
                             </div>
                         </form>
 
-                        <!-- Workflow -->
-                        <div class="panel mt-3">
-                            <h6 class="panel-title mb-3" style="color:#000;">
-                                <i class="bi bi-info-circle me-1"></i>
-                                Workflow
-                            </h6>
+                    <div class="panel mt-3">
+                    <h6 class="panel-title mb-3">
+                        <i class="bi bi-info-circle me-1"></i>
+                        Workflow
+                    </h6>
 
-                            <div class="workflow-thumb d-flex justify-content-center">
-                                <img src="<?= BASE_URL ?>public/images/workflow.jpg"
-                                    class="popup-image rounded"
-                                    style="max-width:380px; cursor:zoom-in; display:block;"
-                                    alt="Workflow">
-                            </div>
+                    <div class="workflow-thumb d-flex justify-content-center">
+                    <img src="<?= BASE_URL ?>public/images/workflow.jpg"
+                        class="popup-image rounded"
+                        style="max-width:380px; cursor:zoom-in; display:block;"
+                        alt="Workflow">
+                    </div>
+                    </div>
+
                         </div>
-
                     </div>
                 </div>
-            </div>
-        </div>
-    </div>
-</main>
+                </div>
+            </main>
 
 <script>
 // Refresh captcha via AJAX

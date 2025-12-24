@@ -105,161 +105,108 @@ require_once __DIR__ . '/includes/header.php';
 ?>
 
 <div class="container-fluid py-4">
-    <div class="row justify-content-center">
-        <div class="col-lg-8 col-xl-7">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2>Edit Request</h2>
+        <a href="lihatRequest.php" class="btn btn-secondary">
+            <i class="bi bi-arrow-left"></i> Kembali
+        </a>
+    </div>
 
-            <!-- Header -->
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <div>
-                    <h3 class="fw-semibold mb-1">Edit Request</h3>
-                    <p class="text-muted small mb-0">
-                        Update your existing support request
-                    </p>
+    <?php if ($error): ?>
+        <div class="alert alert-danger"><?= $error ?></div>
+    <?php endif; ?>
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+
+            <form method="POST" enctype="multipart/form-data">
+
+                <!-- JENIS REQUEST -->
+                <div class="mb-3">
+                    <label class="form-label">Jenis Request</label>
+                    <select name="JenisRequest" id="jenisRequest" class="form-control" required>
+                        <option value="">-- Pilih Jenis --</option>
+                        <option value="system"   <?= $req['ApkID'] ? 'selected' : '' ?>>System</option>
+                        <option value="hardware"<?= $req['HwID'] ? 'selected' : '' ?>>Hardware</option>
+                    </select>
                 </div>
 
-                <a href="lihatRequest.php" class="btn btn-outline-secondary btn-sm">
-                    <i class="bi bi-arrow-left me-1"></i> Back
-                </a>
-            </div>
-
-            <?php if ($error): ?>
-                <div class="alert alert-danger"><?= $error ?></div>
-            <?php endif; ?>
-
-            <form method="POST" enctype="multipart/form-data"
-                  class="card border-0 shadow-sm">
-
-                <div class="card-body p-4">
-
-                    <!-- Request Type -->
-                    <div class="mb-4">
-                        <label class="form-label fw-medium">Request Type</label>
-                        <select name="JenisRequest" id="jenisRequest"
-                                class="form-select" required>
-                            <option value="">Select type</option>
-                            <option value="system"
-                                <?= $req['ApkID'] ? 'selected' : '' ?>>
-                                System
+                <!-- SYSTEM -->
+                <div class="mb-3 d-none" id="formSystem">
+                    <label class="form-label">Nama Aplikasi</label>
+                    <select name="ApkID" class="form-control">
+                        <option value="">-- Pilih Aplikasi --</option>
+                        <?php foreach ($listAplikasi as $apk): ?>
+                            <option value="<?= $apk['ApkID']; ?>"
+                                <?= $req['ApkID'] == $apk['ApkID'] ? 'selected' : '' ?>>
+                                <?= htmlspecialchars($apk['NamaApk']); ?>
                             </option>
-                            <option value="hardware"
-                                <?= $req['HwID'] ? 'selected' : '' ?>>
-                                Infrastructure
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+
+                <!-- HARDWARE -->
+                <div class="mb-3 d-none" id="formHardware">
+                    <label class="form-label">Nama Hardware</label>
+                    <select name="HwID" class="form-control">
+                        <option value="">-- Pilih Hardware --</option>
+                        <?php foreach ($listHardware as $hw): ?>
+                            <option value="<?= $hw['HwID']; ?>"
+                                <?= $req['HwID'] == $hw['HwID'] ? 'selected' : '' ?>>
+                                <?= htmlspecialchars($hw['NamaHw']); ?>
                             </option>
-                        </select>
-                    </div>
-
-                    <div id="formLanjutan">
-
-                        <!-- System -->
-                        <div id="formSystem"
-                             class="<?= $req['ApkID'] ? '' : 'd-none' ?> mb-4">
-                            <label class="form-label fw-medium">Application</label>
-                            <select name="ApkID" class="form-select">
-                                <option value="">Select application</option>
-                                <?php foreach ($listAplikasi as $apk): ?>
-                                    <option value="<?= $apk['ApkID']; ?>"
-                                        <?= $req['ApkID'] == $apk['ApkID'] ? 'selected' : '' ?>>
-                                        <?= htmlspecialchars($apk['NamaApk']); ?>
-                                    </option>
-                                <?php endforeach; ?>
-                            </select>
-                        </div>
-
-                        <!-- Hardware -->
-                        <div id="formHardware"
-                             class="<?= $req['HwID'] ? '' : 'd-none' ?> mb-4">
-                            <label class="form-label fw-medium">Infrastructure</label>
-                            <select name="HwID" class="form-select">
-                                <option value="">Select infrastructure</option>
-                                <?php foreach ($listHardware as $hw): ?>
-                                    <option value="<?= $hw['HwID']; ?>"
-                                        <?= $req['HwID'] == $hw['HwID'] ? 'selected' : '' ?>>
-                                        <?= htmlspecialchars($hw['NamaHw']); ?>
-                                    </option>
-                                <?php endforeach; ?>
-                            </select>
-                        </div>
-
-                        <!-- Priority -->
-                        <div class="mb-4">
-                            <label class="form-label fw-medium d-block">Priority</label>
-                            <div class="d-flex gap-4">
-                                <div class="form-check">
-                                    <input class="form-check-input"
-                                           type="radio"
-                                           name="Prioritas"
-                                           value="Low"
-                                           <?= $req['Prioritas'] == 'Low' ? 'checked' : '' ?>>
-                                    <label class="form-check-label">Low</label>
-                                </div>
-
-                                <div class="form-check">
-                                    <input class="form-check-input"
-                                           type="radio"
-                                           name="Prioritas"
-                                           value="Normal"
-                                           <?= $req['Prioritas'] == 'Normal' ? 'checked' : '' ?>>
-                                    <label class="form-check-label">Normal</label>
-                                </div>
-
-                                <div class="form-check">
-                                    <input class="form-check-input"
-                                           type="radio"
-                                           name="Prioritas"
-                                           value="High"
-                                           <?= $req['Prioritas'] == 'High' ? 'checked' : '' ?>>
-                                    <label class="form-check-label">High</label>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Request -->
-                        <div class="mb-4">
-                            <label class="form-label fw-medium">Request Details</label>
-                            <textarea name="Request"
-                                      class="form-control"
-                                      rows="4"
-                                      required><?= htmlspecialchars($req['Request']) ?></textarea>
-                        </div>
-
-                        <!-- Documentation -->
-                        <div class="mb-4">
-                            <label class="form-label fw-medium">Documentation Image</label>
-
-                            <?php if (!empty($req['Dokumentasi'])): ?>
-                                <div class="mb-3">
-                                    <img src="<?= BASE_URL ?>public/images/request/<?= $req['Dokumentasi'] ?>"
-                                         class="img-thumbnail"
-                                         style="max-width:220px;">
-                                </div>
-                                <small class="text-muted d-block mb-2">
-                                    Leave empty if you don’t want to change the image
-                                </small>
-                            <?php endif; ?>
-
-                            <input type="file"
-                                   name="Dokumentasi"
-                                   class="form-control"
-                                   accept=".jpg,.jpeg">
-                        </div>
-
-                    </div>
+                        <?php endforeach; ?>
+                    </select>
                 </div>
 
-                <!-- Footer -->
-                <div class="card-footer bg-transparent border-0 text-end px-4 pb-4">
-                    <a href="lihatRequest.php"
-                       class="btn btn-outline-secondary me-2">
-                        Cancel
-                    </a>
-                    <button class="btn btn-primary px-4">
-                        Update Request
-                    </button>
+                <!-- PRIORITAS -->
+                <div class="mb-3">
+                    <label class="form-label d-block">Prioritas</label>
+
+                    <label class="me-3">
+                        <input type="radio" name="Prioritas" value="Low"
+                            <?= $req['Prioritas'] == 'Low' ? 'checked' : '' ?>> Low
+                    </label>
+
+                    <label class="me-3">
+                        <input type="radio" name="Prioritas" value="Normal"
+                            <?= $req['Prioritas'] == 'Normal' ? 'checked' : '' ?>> Normal
+                    </label>
+
+                    <label>
+                        <input type="radio" name="Prioritas" value="High"
+                            <?= $req['Prioritas'] == 'High' ? 'checked' : '' ?>> High
+                    </label>
                 </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Request</label>
+                    <textarea name="Request" class="form-control" required><?= htmlspecialchars($req['Request']) ?></textarea>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Dokumentasi</label>
+
+                    <?php if (!empty($req['Dokumentasi'])): ?>
+                        <div class="mb-2">
+                            <img src="<?= BASE_URL ?>public/images/request/<?= $req['Dokumentasi'] ?>"
+                                alt="Dokumentasi" class="img-thumbnail" style="max-width: 250px;">
+                        </div>
+                        <small class="text-muted d-block mb-2">
+                            Biarkan kosong jika tidak ingin mengganti gambar
+                        </small>
+                    <?php endif; ?>
+
+                    <input type="file" name="Dokumentasi" class="form-control" accept=".jpg,.jpeg">
+                </div>
+
+                <button class="btn btn-primary">
+                    <i class="bi bi-pencil-square"></i> Update Request
+                </button>
 
             </form>
-
         </div>
     </div>
 </div>
+
 <?php require_once __DIR__ . '/includes/footer.php'; ?>

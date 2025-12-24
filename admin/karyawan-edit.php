@@ -63,76 +63,72 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 require_once __DIR__ . '/includes/header.php';
 ?>
-<div class="container-fluid py-5">
-    <h2 class="mb-4 fw-semibold text-center">Edit Employee</h2>
 
-    <?php if (!empty($error)): ?>
-        <div class="alert alert-danger shadow-sm"><?= htmlspecialchars($error) ?></div>
+<div class="container-fluid py-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2>Edit Employee</h2>
+        <a href="karyawan-list.php" class="btn btn-secondary">
+            <i class="bi bi-arrow-left"></i> Back
+        </a>
+    </div>
+
+    <?php if ($error): ?>
+        <div class="alert alert-danger"><?= $error ?></div>
     <?php endif; ?>
 
-    <form method="POST" class="card p-5 shadow-lg border-0 mx-auto" style="max-width: 900px;">
-        <input type="hidden" name="NIK" value="<?= htmlspecialchars($employee['NIK']) ?>">
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <form method="POST">
+                <input type="hidden" name="NIK" value="<?= htmlspecialchars($employee['NIK']) ?>">
 
-        <div class="row g-4">
-            <div class="col-md-6">
-                <label class="form-label fw-medium">Employee ID</label>
-                <input type="text" name="NIK" class="form-control rounded-3 py-2" 
-                       value="<?= htmlspecialchars($employee['NIK']) ?>" readonly>
-            </div>
+                <div class="mb-3">
+                    <label class="form-label">Employee Name</label>
+                    <input type="text" class="form-control" name="Name"
+                        value="<?= htmlspecialchars($employee['Nama']) ?>" required>
+                </div>
 
-            <div class="col-md-6">
-                <label class="form-label fw-medium">Employee Name</label>
-                <input type="text" name="Nama" class="form-control rounded-3 py-2" 
-                       value="<?= htmlspecialchars($employee['Nama']) ?>" required>
-            </div>
+                <div class="mb-3">
+                    <label class="form-label">Position</label>
+                    <input type="text" class="form-control" name="Position"
+                        value="<?= htmlspecialchars($employee['Jabatan']) ?>" required>
+                </div>
 
-            <div class="col-md-6">
-                <label class="form-label fw-medium">Position</label>
-                <input type="text" name="Jabatan" class="form-control rounded-3 py-2" 
-                       value="<?= htmlspecialchars($employee['Jabatan']) ?>" required>
-            </div>
+                <div class="mb-3">
+                    <label class="form-label">Department</label>
+                    <input type="text" class="form-control" name="Department"
+                        value="<?= htmlspecialchars($employee['Departemen']) ?>" required>
+                </div>
 
-            <div class="col-md-6">
-                <label class="form-label fw-medium">Department</label>
-                <input type="text" name="Departement" class="form-control rounded-3 py-2" 
-                       value="<?= htmlspecialchars($employee['Departemen']) ?>" required>
-            </div>
+                <div class="mb-3">
+                    <label class="form-label">Date of Birth</label>
+                    <input type="date" class="form-control" name="DOB"
+                        value="<?= htmlspecialchars($employee['TTL'] ?? ''); ?>" required>
+                </div>
 
-            <div class="col-md-6">
-                <label class="form-label fw-medium">Date of Birth</label>
-                <input type="date" name="TTL" class="form-control rounded-3 py-2" 
-                       value="<?= htmlspecialchars($employee['TTL'] ?? ''); ?>" required>
-            </div>
+                <div class="mb-3">
+                    <label class="form-label">Address</label>
+                    <input type="text" class="form-control" name="Address"
+                        value="<?= htmlspecialchars($employee['Alamat']) ?>" required>
+                </div>
 
-            <div class="col-md-6">
-                <label class="form-label fw-medium">Date Joined</label>
-                <input type="date" name="Tgl_masuk_kerja" class="form-control rounded-3 py-2" 
-                       value="<?= htmlspecialchars($employee['Tgl_masuk_kerja']) ?>" required>
-            </div>
+                <div class="mb-3">
+                    <label class="form-label">Date Joined</label>
+                    <input type="date" class="form-control" name="Date_Joined"
+                        value="<?= htmlspecialchars($employee['Tgl_masuk_kerja']) ?>" required>
+                </div>
 
-            <div class="col-12">
-                <label class="form-label fw-medium">Address</label>
-                <input type="text" name="Alamat" class="form-control rounded-3 py-2" 
-                       value="<?= htmlspecialchars($employee['Alamat']) ?>" required>
-            </div>
+                <div class="mb-3">
+                    <label class="form-label">Plant</label>
+                    <input type="text" class="form-control" name="Plant"
+                        value="<?= htmlspecialchars($employee['Plant']) ?>" required>
+                </div>
 
-            <div class="col-md-6">
-                <label class="form-label fw-medium">Plant</label>
-                <input type="text" name="Plant" class="form-control rounded-3 py-2" 
-                       value="<?= htmlspecialchars($employee['Plant']) ?>" required>
-            </div>
+                <button type="submit" class="btn btn-primary">
+                    <i class="bi bi-pencil-square"></i> Update Employee
+                </button>
+            </form>
         </div>
-
-        <div class="text-end mt-4">
-            <a href="karyawan-list.php" class="btn btn-secondary rounded-3 px-4 py-2 shadow-sm me-2">
-                Cancel
-            </a>
-            <button class="btn btn-primary rounded-3 px-5 py-2 shadow-sm" type="submit">
-                Save
-            </button>
-        </div>
-    </form>
+    </div>
 </div>
 
 <?php require_once __DIR__ . '/includes/footer.php'; ?>
-

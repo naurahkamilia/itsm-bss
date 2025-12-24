@@ -37,186 +37,129 @@ $user = $userModel->getAll($filters);
 
 require_once __DIR__ . '/includes/header.php';
 ?>
+
 <div class="container-fluid py-4">
 
-    <!-- HEADER -->
-    <div class="page-header d-flex align-items-center mb-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
         <h2>User Account</h2>
-
-        <div class="ms-auto">
-            <a href="user-add.php" class="btn btn-primary">
-                <i class="bi bi-person-add"></i> Add User
-            </a>
-        </div>
+        <a href="user-add.php" class="btn btn-success">
+            <i class="bi bi-person-add"></i> Add User
+        </a>
     </div>
 
-    <!-- ALERT -->
-    <div class="mb-3">
-        <?php if (isset($_GET['success'])): ?>
-            <div class="alert alert-success mb-2">
-                User added successfully.
-            </div>
-        <?php endif; ?>
+    <!-- Alert -->
+    <?php if (isset($_GET['success'])): ?>
+        <div class="alert alert-success">User data added successfully!</div>
+    <?php endif; ?>
 
-        <?php if (isset($_GET['updated'])): ?>
-            <div class="alert alert-primary mb-2">
-                User updated successfully.
-            </div>
-        <?php endif; ?>
+    <?php if (isset($_GET['updated'])): ?>
+        <div class="alert alert-primary">User data updated successfully!</div>
+    <?php endif; ?>
 
-        <?php if (isset($_GET['deleted'])): ?>
-            <div class="alert alert-danger mb-2">
-                User deleted successfully.
-            </div>
-        <?php endif; ?>
-    </div>
+    <?php if (isset($_GET['deleted'])): ?>
+        <div class="alert alert-danger">User data deleted successfully!</div>
+    <?php endif; ?>
 
-    <!-- SEARCH -->
-    <form method="GET" class="search-box mb-4">
+    <!-- SEARCH FORM -->
+    <form method="GET" class="mb-3">
         <div class="input-group">
             <input type="text"
                    name="search"
                    class="form-control"
-                   placeholder="Search user..."
-                   value="<?= $_GET['search'] ?? '' ?>">
-            <button class="btn btn-primary">
-                <i class="bi bi-search"></i>
-            </button>
+                   placeholder="Search users..."
+                   value="<?= isset($_GET['search']) ? htmlspecialchars($_GET['search']) : '' ?>">
+            <button class="btn btn-primary"><i class="bi bi-search"></i> Search</button>
         </div>
     </form>
 
-    <!-- TABLE -->
+    <!-- USER TABLE -->
     <div class="card shadow-sm">
-        <div class="table-responsive">
-            <table class="table table-hover mb-0">
-                <thead>
+        <div class="card-body p-0">
+
+            <table class="table table-striped table-hover mb-0">
+                <thead class="table-dark">
                     <tr>
                         <th width="120">Employee ID</th>
-                        <th>Name</th>
-                        <th>Email</th>
-                        <th width="120">Role</th>
-                        <th width="120">Status</th>
-                        <th width="120">Action</th>
+                        <th width="180">Name</th>
+                        <th width="150">Email</th>
+                        <th width="100">Role</th>
+                        <th width="100">Status</th>
+                        <th width="150">Action</th>
                     </tr>
                 </thead>
 
                 <tbody>
                 <?php if (empty($user)): ?>
                     <tr>
-                        <td colspan="6" class="text-center text-muted py-4">
-                            No users found
+                        <td colspan="7" class="text-center py-4 text-muted">
+                            No users found.
                         </td>
                     </tr>
                 <?php endif; ?>
 
-                <?php foreach ($user as $u): ?>
+                <?php 
+                $no = $offset + 1;
+                foreach ($user as $u): 
+                ?>
                     <tr>
                         <td><?= htmlspecialchars($u['NIK']); ?></td>
-                        <td><?= ucwords(htmlspecialchars($u['name'])); ?></td>
+                        <td><?= htmlspecialchars($u['name']); ?></td>
                         <td><?= htmlspecialchars($u['email']); ?></td>
-                        <td><?= $u['role'] === 'admin' ? 'Admin' : ($u['role'] === 'customer' ? 'User' : htmlspecialchars($u['role'])); ?></td>
-                        <td><?= ucwords(htmlspecialchars($u['status'])); ?></td>
+                        <td><?= htmlspecialchars($u['role']); ?></td>
+                        <td><?= htmlspecialchars($u['status']); ?></td>
                         <td>
-                            <a href="user-edit.php?NIK=<?= $u['NIK']; ?>" class="btn btn-sm btn-outline-secondary me-1">
+                            <a href="user-edit.php?NIK=<?= $u['NIK']; ?>" 
+                               class="btn btn-sm btn-primary">
                                 <i class="bi bi-pencil"></i>
                             </a>
 
-                            <button type="button"
-                                    class="btn btn-sm btn-outline-danger btn-delete-trigger"
-                                    data-bs-toggle="modal"
-                                    data-bs-target="#deleteModal"
-                                    data-nik="<?= $u['NIK']; ?>"
-                                    data-name="<?= htmlspecialchars($u['name']); ?>">
+                            <a href="user-delete.php?id=<?= $u['NIK']; ?>"
+                               class="btn btn-sm btn-danger"
+                               onclick="return confirm('Are you sure you want to delete this user?')">
                                 <i class="bi bi-trash"></i>
-                            </button>
+                            </a>
                         </td>
                     </tr>
                 <?php endforeach; ?>
                 </tbody>
 
             </table>
+
         </div>
     </div>
 
-    <?php if ($totalPages > 1): ?>
-    <nav class="mt-3 d-flex justify-content-center">
-    <ul class="pagination pagination-sm mb-0">
+    <!-- PAGINATION -->
+    <nav class="mt-3">
+        <ul class="pagination">
 
-        <?php
-        $prevParams = $_GET;
-        $prevParams['page'] = max(1, $page - 1);
-        $nextParams = $_GET;
-        $nextParams['page'] = min($totalPages, $page + 1);
-        ?>
-
-        <!-- Prev -->
-        <li class="page-item <?= ($page <= 1) ? 'disabled' : '' ?>">
-            <a class="page-link rounded-pill px-2" href="?<?= http_build_query($prevParams) ?>">&laquo;</a>
-        </li>
-
-        <!-- Pages -->
-        <?php for ($i = 1; $i <= $totalPages; $i++):
-            $params = $_GET;
-            $params['page'] = $i;
-        ?>
-            <li class="page-item <?= ($i == $page) ? 'active' : '' ?>">
-                <a class="page-link rounded-pill px-3 py-1" href="?<?= http_build_query($params) ?>"><?= $i ?></a>
+            <!-- Previous -->
+            <li class="page-item <?= ($page <= 1) ? 'disabled' : '' ?>">
+                <a class="page-link" 
+                   href="?page=<?= $page - 1 ?>&search=<?= $_GET['search'] ?? '' ?>">
+                    &laquo;
+                </a>
             </li>
-        <?php endfor; ?>
 
-        <!-- Next -->
-        <li class="page-item <?= ($page >= $totalPages) ? 'disabled' : '' ?>">
-            <a class="page-link rounded-pill px-2" href="?<?= http_build_query($nextParams) ?>">&raquo;</a>
-        </li>
+            <?php for ($i = 1; $i <= $totalPages; $i++): ?>
+                <li class="page-item <?= ($i == $page) ? 'active' : '' ?>">
+                    <a class="page-link" 
+                       href="?page=<?= $i ?>&search=<?= $_GET['search'] ?? '' ?>">
+                        <?= $i ?>
+                    </a>
+                </li>
+            <?php endfor; ?>
 
-    </ul>
-</nav>
-<?php endif; ?>
+            <!-- Next -->
+            <li class="page-item <?= ($page >= $totalPages) ? 'disabled' : '' ?>">
+                <a class="page-link" 
+                   href="?page=<?= $page + 1 ?>&search=<?= $_GET['search'] ?? '' ?>">
+                    &raquo;
+                </a>
+            </li>
 
-<!-- Modal Delete -->
-<div class="modal fade" id="deleteModal" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content" style="border-radius:12px; box-shadow:0 4px 20px rgba(0,0,0,0.15); border:none; background-color:#f8f9fa;">
-
-      <!-- Custom Header -->
-      <div style="padding:1rem 1.5rem; border-bottom:1px solid #e0e0e0; display:flex; align-items:center; justify-content:space-between;">
-        <h5 style="margin:0; font-weight:600; color:#e74c3c;">
-          <i class="bi bi-exclamation-circle me-2"></i>Confirm Deletion
-        </h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-
-      <!-- Body -->
-      <div style="padding:1rem 1.5rem; font-size:0.95rem; color:#333;">
-        Are you sure you want to delete <strong id="userName"></strong>?
-      </div>
-
-      <!-- Footer -->
-      <div style="padding:1rem 1.5rem; display:flex; justify-content:flex-end; gap:0.5rem; border-top:1px solid #e0e0e0;">
-        <button type="button" class="btn btn-light" data-bs-dismiss="modal" style="border-radius:6px; border:1px solid #ccc;">Cancel</button>
-        <a href="#" id="confirmDelete" class="btn" style="background-color:#e74c3c; color:#fff; border-radius:6px; padding:0.5rem 1rem;">Delete</a>
-      </div>
-
-    </div>
-  </div>
-</div>
+        </ul>
+    </nav>
 
 </div>
-
-<script>
-document.querySelectorAll('.btn-delete-trigger').forEach(btn => {
-    btn.addEventListener('click', function() {
-        const nik = this.dataset.nik;
-        const name = this.dataset.name;
-
-        // isi nama di modal
-        document.getElementById('userName').textContent = name;
-
-        // ubah href tombol delete ke backend PHP
-        document.getElementById('confirmDelete').href = 'user-delete.php?id=' + nik;
-    });
-});
-</script>
-
 
 <?php require_once __DIR__ . '/includes/footer.php'; ?>
